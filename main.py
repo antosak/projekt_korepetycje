@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 import uno
 import numpy as np
 number_of_iterations = 5
-client_list = uno.create_brave_new_world('Tutoring2.xlsx')
+client_list = uno.create_brave_new_world('Tutoring3.xlsx')
 population_size = 3*len(client_list)
 
 day_ptr_list = [0]
@@ -35,5 +35,15 @@ while len(current_population) < population_size:
     test_counter += 1
 
 print(test_counter)
+
+for curr_iter in range(number_of_iterations):
+    rand = np.random.random_sample()
+    genetic_operation = ''
+    if rand > 0.8:
+        parent = np.random.randint(low=0, high=len(current_population))
+    else:
+        parent_1 = np.random.randint(low=0, high=len(current_population))
+        parent_2 = np.random.randint(low=0, high=len(current_population))
+
 
 

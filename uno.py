@@ -12,7 +12,7 @@ fuel_consumption = 8  # l/100km
 average_speed = 50  # km/h
 fuel_cost = 4.20  # PlN/l
 fuel_coeff = (fuel_consumption / 100) * fuel_cost  # useful thing
-our_home = (0, 0)
+our_home = (5, 5)
 waiting_threshold = 0.5
 
 
@@ -221,6 +221,13 @@ crossover_barrier = 2
 
 
 def crossover(parent_1, parent_2, current_iter, ptr_list):
+    """
+    :param parent_1: Parent No.1
+    :param parent_2: Parent No.2
+    :param current_iter: Current iteration number
+    :param ptr_list: List of pointers to week days
+    :return: Child No.1, Child No.2
+    """
     if current_iter <= crossover_barrier:  # number of iter
         genome_length = len(parent_1) // 2
 
@@ -243,6 +250,10 @@ def crossover(parent_1, parent_2, current_iter, ptr_list):
 
 
 def mutation(parent):
+    """
+    :param parent: Parent
+    :return: Child
+    """
     number_of_cells = len(parent)//15+1
     child = parent
     for i in range(number_of_cells):
