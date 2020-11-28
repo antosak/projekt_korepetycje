@@ -3,7 +3,6 @@
 
 import numpy as np
 from math import sqrt
-# import matplotlib.pyplot as plt
 import pandas as pd
 import random
 
@@ -17,17 +16,6 @@ fuel_cost = 4.20  # PlN/l
 fuel_coeff = (fuel_consumption / 100) * fuel_cost  # useful thing
 our_home = (0, 0)
 
-
-# monday_ptr_ = 0
-# for i in range(len(client_list)):
-#     if client_list[i].day == 'tuesday' and client_list[i-1].day == 'monday':
-#         tuesday_ptr_ = i
-#     elif client_list[i].day == 'wednesday' and client_list[i-1].day == 'tuesday':
-#         wednesday_ptr_ = i
-#     elif client_list[i].day == 'thursday' and client_list[i-1].day == 'wednesday':
-#         thursday_ptr_ = i
-#     elif client_list[i].day == 'friday' and client_list[i-1].day == 'thursday':
-#         friday_ptr_ = i
 
 def read_data(path: str = default_path):
     data = pd.read_excel(path, index_col=0, usecols=[0, 1, 2, 3, 4, 5, 6, 7, 8])
@@ -172,7 +160,7 @@ res = final_objective_function()  # the more the better!
 crossover_barrier = 2
 
 
-def cossover(parent_1, parent_2, citer, ptr_list):
+def crossover(parent_1, parent_2, citer, ptr_list):
     if citer <= crossover_barrier:  # number of iter
         genome_length = len(parent_1) // 2
 
