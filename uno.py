@@ -5,7 +5,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
 import random
-
+import time
 
 # constants
 number_of_clients = 20
@@ -15,14 +15,18 @@ average_speed = 50  # km/h
 fuel_cost = 4.20  # PlN/l
 
 
-def read_data():
-    data = pd.read_excel()
+def read_data(path: str):
+    data = pd.read_excel(path, index_col=0, usecols=[0, 1, 2, 3, 4, 5, 6, 7, 8])
+    return data
 
 
-def create_new_world():
+def create_brave_new_world(source: str):
     all_the_clients = []
-    for client in range(number_of_clients):
-        all_the_clients.append(Client(1, 1, 1, 1, 1, 1))
+    data = read_data(source)
+    for index, row in data.iterrows():
+        all_the_clients.append(Client(index, row['Price'], (row['X_'], row['Y_']), row['Preparation_Time'], row['Lesson_Duration'], row['Lesson_Start_Time'], row['Lesson_Day']))
+
+    return all_the_clients
 
 
 class Client(object):
@@ -40,3 +44,6 @@ class Client(object):
 
     def remove_client(self):
         pass
+
+
+dt = create_brave_new_world('Trtoring.xlsx')
