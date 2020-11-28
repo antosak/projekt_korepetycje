@@ -23,7 +23,11 @@ def read_data(path: str = default_path):
 
 
 # Returns list of instances of class Client in chronological order in a week.
-def create_brave_new_world(source: str = default_path):
+def create_brave_new_world(source: str = default_path) -> list:
+    """
+    :param source: path to a file that provides data
+    :return: ordered list of all the meetings and information about them
+    """
     all_the_clients = []
     data = read_data(source)
     for index, row in data.iterrows():
@@ -55,6 +59,12 @@ class Client(object):
 
 # Checks whether a child (solution), that algorithm returned, is legal (within several severe limitations).
 def legal_child(client_list, child, home_returns_vector) -> bool:
+    """
+    :param client_list: list that function "create_brave_new_world" returns
+    :param child: solution that algorithm (crossover or mutation) provides
+    :param home_returns_vector: list that function "kappa_maker" provides
+    :return: decision (bool) if new solution is legal
+    """
     income = 0
     for i in range(0, len(child)):
         if child[i] == 1:
@@ -96,8 +106,13 @@ def legal_child(client_list, child, home_returns_vector) -> bool:
     return True
 
 
-# Based on the
-def kappa_maker(client_list, child):
+# Based on the solution says when we go back home
+def kappa_maker(client_list, child) -> list:
+    """
+    :param client_list: list that function "create_brave_new_world" returns
+    :param child: solution that algorithm (crossover or mutation) provides
+    :return: binary vector, that says when we go back home
+    """
     kappa = []
     for i in range(0, len(child)):
         if child[i] == 0:
@@ -119,7 +134,12 @@ example_kappa = (1, 0, 0, 0, 1)
 world = create_brave_new_world()
 
 
-def income_objective_function(solution: list = example_sol, kappa: list = example_kappa):
+def income_objective_function(solution: list = example_sol, kappa: list = example_kappa) -> float:
+    """
+    :param solution: something that crossover or mutation spitted out
+    :param kappa: information from "kappa maker" - when we go back home
+    :return: real number that tells how good in terms of income the solution is
+    """
     income = []
     last_visit = our_home
     counter = 0
@@ -135,7 +155,12 @@ def income_objective_function(solution: list = example_sol, kappa: list = exampl
     return result
 
 
-def time_objective_function(solution: list = example_sol, kappa: list = example_kappa):
+def time_objective_function(solution: list = example_sol, kappa: list = example_kappa) -> float:
+    """
+    :param solution: solution: something that crossover or mutation spitted out
+    :param kappa: information from "kappa maker" - when we go back home
+    :return: real number that tells how good in terms of time the solution is
+    """
     time_spent = []
     last_visit = our_home
     counter = 0
@@ -151,12 +176,16 @@ def time_objective_function(solution: list = example_sol, kappa: list = example_
     return result
 
 
-def final_objective_function():
+def final_objective_function() -> float:
+    """
+    :return: combination of income and time
+    """
     return income_objective_function() / (time_objective_function() + 1)
 
 
 res = final_objective_function()  # the more the better!
 
+# number that says up to which iteration first type of crossover is more likely to happen
 crossover_barrier = 2
 
 
