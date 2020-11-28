@@ -14,6 +14,7 @@ number_of_iterations = 5
 fuel_consumption = 8  # l/100km
 average_speed = 50  # km/h
 fuel_cost = 4.20  # PlN/l
+fuel_coeff = (fuel_consumption / 100) * fuel_cost  # useful thing
 our_home = (0, 0)
 
 
@@ -49,14 +50,23 @@ class Client(object):
         pass
 
 
-example = (0, 1, 0, 1, 1)
+example_sol = (0, 1, 0, 1, 1)
+example_kappa = (1, 0, 0, 0, 1)
 world = create_brave_new_world()
 
 
-def objective_function(current_solution=example):
+def objective_function(current_solution=example_sol, kappa=example_kappa):
     income = []
     last_visit = our_home
+    kappa_counter = 0
     for elem in world:
-        income = 0
-    result = np.dot(current_solution, )
+        income.append(elem.price - np.sqrt((elem.coordinates[0] - last_visit[0])**2 + (elem.coordinates[1] - last_visit[1])**2)*fuel_coeff
+                      - kappa[kappa_counter]*np.sqrt((our_home[0] - last_visit[0])**2 + (our_home[1] - last_visit[1])**2)*fuel_coeff)
+        if current_solution[kappa_counter] == 1:
+            last_visit = elem.coordinates
+        kappa_counter += 1
+    result = np.dot(current_solution, income)
     return result
+
+
+res = objective_function()
