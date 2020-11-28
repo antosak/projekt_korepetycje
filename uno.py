@@ -8,8 +8,6 @@ import random
 
 # constants
 default_path = 'Tutoring.xlsx'
-number_of_clients = 20
-number_of_iterations = 5
 fuel_consumption = 8  # l/100km
 average_speed = 50  # km/h
 fuel_cost = 4.20  # PlN/l

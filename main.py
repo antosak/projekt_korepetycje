@@ -3,8 +3,10 @@
 
 import matplotlib.pyplot as plt
 import uno
-
-client_list = uno.create_brave_new_world()
+import numpy as np
+number_of_iterations = 5
+client_list = uno.create_brave_new_world('Tutoring2.xlsx')
+population_size = 3*len(client_list)
 
 day_ptr_list = [0]
 for i in range(len(client_list)):
@@ -20,5 +22,18 @@ for i in range(len(client_list)):
         day_ptr_list.append(i)
     elif client_list[i].day == 'sunday' and client_list[i-1].day == 'saturday':
         day_ptr_list.append(i)
+
+current_population = []
+kappa_population = []
+test_counter = 0
+while len(current_population) < population_size:
+    population_member = np.random.randint(2, size=len(client_list))
+    kappa = uno.kappa_maker(client_list,population_member)
+    if uno.legal_child(client_list,population_member,kappa):
+        current_population.append(population_member)
+        kappa_population.append(kappa)
+    test_counter += 1
+
+print(test_counter)
 
 
