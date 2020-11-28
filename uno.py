@@ -23,6 +23,7 @@ def read_data(path: str = default_path):
     return data
 
 
+# Returns list of instances of class Client in chronological order in a week.
 def create_brave_new_world(source: str = default_path):
     all_the_clients = []
     data = read_data(source)
@@ -33,6 +34,7 @@ def create_brave_new_world(source: str = default_path):
     return all_the_clients
 
 
+# Somewhat surprisingly class Client represents a single date with a fool, not a fool itself.
 class Client(object):
     def __init__(self, name, price, coordinates, prep_time, teaching_time, hour, day):
         self.name = name
@@ -50,6 +52,7 @@ class Client(object):
         pass
 
 
+# Checks whether a child (solution), that algorithm returned, is legal (within several severe limitations).
 def legal_child(client_list, child, home_returns_vector) -> bool:
     income = 0
     for i in range(0, len(child)):
@@ -91,6 +94,7 @@ def legal_child(client_list, child, home_returns_vector) -> bool:
     return True
 
 
+# Based on the
 def kappa_maker(client_list, child):
     kappa = []
     for i in range(0, len(child)):
