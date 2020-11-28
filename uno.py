@@ -233,7 +233,7 @@ def crossover(parent_1, parent_2, current_iter, ptr_list):
         return child_1, child_2
 
     elif current_iter > crossover_barrier:
-        genome_length = ptr_list[random.randint(0, 6)]
+        genome_length = ptr_list[random.randint(0, len(ptr_list))]
 
         child_1 = [parent_1[:genome_length]]
         child_1.extend([parent_2[genome_length:]])

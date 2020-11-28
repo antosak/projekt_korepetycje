@@ -16,5 +16,9 @@ for i in range(len(client_list)):
         day_ptr_list.append(i)
     elif client_list[i].day == 'friday' and client_list[i-1].day == 'thursday':
         day_ptr_list.append(i)
+    elif client_list[i].day == 'saturday' and client_list[i-1].day == 'friday':
+        day_ptr_list.append(i)
+    elif client_list[i].day == 'sunday' and client_list[i-1].day == 'saturday':
+        day_ptr_list.append(i)
 
 
