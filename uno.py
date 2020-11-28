@@ -3,9 +3,9 @@
 
 import numpy as np
 from math import sqrt
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
 import pandas as pd
-
+import random
 
 # constants
 default_path = 'Tutoring.xlsx'
@@ -18,6 +18,17 @@ fuel_coeff = (fuel_consumption / 100) * fuel_cost  # useful thing
 our_home = (0, 0)
 
 
+# monday_ptr_ = 0
+# for i in range(len(client_list)):
+#     if client_list[i].day == 'tuesday' and client_list[i-1].day == 'monday':
+#         tuesday_ptr_ = i
+#     elif client_list[i].day == 'wednesday' and client_list[i-1].day == 'tuesday':
+#         wednesday_ptr_ = i
+#     elif client_list[i].day == 'thursday' and client_list[i-1].day == 'wednesday':
+#         thursday_ptr_ = i
+#     elif client_list[i].day == 'friday' and client_list[i-1].day == 'thursday':
+#         friday_ptr_ = i
+
 def read_data(path: str = default_path):
     data = pd.read_excel(path, index_col=0, usecols=[0, 1, 2, 3, 4, 5, 6, 7, 8])
     return data
@@ -28,8 +39,10 @@ def create_brave_new_world(source: str = default_path):
     all_the_clients = []
     data = read_data(source)
     for index, row in data.iterrows():
-        all_the_clients.append(Client(index, row['Price'], (row['X_'], row['Y_']), row['Preparation_Time'], row['Lesson_Duration'], row['Lesson_Start_Time'],
-                                      row['Lesson_Day']))
+        all_the_clients.append(
+            Client(index, row['Price'], (row['X_'], row['Y_']), row['Preparation_Time'], row['Lesson_Duration'],
+                   row['Lesson_Start_Time'],
+                   row['Lesson_Day']))
 
     return all_the_clients
 
@@ -81,7 +94,8 @@ def legal_child(client_list, child, home_returns_vector) -> bool:
             if home_returns_vector[i] == 1:
                 last_coordinates = our_home
                 days_value_list[j] += (sqrt(((client_list[i].coordinates[0] - last_coordinates[0]) ** 2) +
-                                            ((client_list[i].coordinates[1] - last_coordinates[1]) ** 2))) / average_speed
+                                            ((client_list[i].coordinates[1] - last_coordinates[
+                                                1]) ** 2))) / average_speed
     for days in days_value_list:
         if days > 4:
             return False
@@ -101,8 +115,8 @@ def kappa_maker(client_list, child):
         if child[i] == 0:
             kappa.append(0)
         else:
-            if i+1 != len(child):
-                if child[i+1] == 1:
+            if i + 1 != len(child):
+                if child[i + 1] == 1:
                     if client_list[i].day == client_list[i + 1].day:
                         kappa.append(0)
                     else:
@@ -122,8 +136,10 @@ def income_objective_function(solution: list = example_sol, kappa: list = exampl
     last_visit = our_home
     counter = 0
     for elem in world:
-        income.append(elem.price - np.sqrt((elem.coordinates[0] - last_visit[0])**2 + (elem.coordinates[1] - last_visit[1])**2)*fuel_coeff
-                      - kappa[counter]*np.sqrt((our_home[0] - last_visit[0])**2 + (our_home[1] - last_visit[1])**2)*fuel_coeff)
+        income.append(elem.price - np.sqrt(
+            (elem.coordinates[0] - last_visit[0]) ** 2 + (elem.coordinates[1] - last_visit[1]) ** 2) * fuel_coeff
+                      - kappa[counter] * np.sqrt(
+            (our_home[0] - last_visit[0]) ** 2 + (our_home[1] - last_visit[1]) ** 2) * fuel_coeff)
         if solution[counter] == 1:
             last_visit = elem.coordinates
         counter += 1
@@ -136,8 +152,10 @@ def time_objective_function(solution: list = example_sol, kappa: list = example_
     last_visit = our_home
     counter = 0
     for elem in world:
-        time_spent.append(elem.prep_time + elem.teaching_time + np.sqrt((elem.coordinates[0] - last_visit[0])**2 + (elem.coordinates[1] - last_visit[1])**2)/average_speed
-                          + kappa[counter]*np.sqrt((our_home[0] - last_visit[0])**2 + (our_home[1] - last_visit[1])**2)/average_speed)
+        time_spent.append(elem.prep_time + elem.teaching_time + np.sqrt(
+            (elem.coordinates[0] - last_visit[0]) ** 2 + (elem.coordinates[1] - last_visit[1]) ** 2) / average_speed
+                          + kappa[counter] * np.sqrt(
+            (our_home[0] - last_visit[0]) ** 2 + (our_home[1] - last_visit[1]) ** 2) / average_speed)
         if solution[counter] == 1:
             last_visit = elem.coordinates
         counter += 1
@@ -146,7 +164,41 @@ def time_objective_function(solution: list = example_sol, kappa: list = example_
 
 
 def final_objective_function():
-    return income_objective_function()/(time_objective_function() + 1)
+    return income_objective_function() / (time_objective_function() + 1)
 
 
 res = final_objective_function()  # the more the better!
+
+crossover_barrier = 2
+
+
+def cossover(parent_1, parent_2, citer, ptr_list):
+    if citer <= crossover_barrier:  # number of iter
+        genome_length = len(parent_1) // 2
+
+        child_1 = [parent_1[:genome_length]]
+        child_1.extend([parent_2[genome_length:]])
+        child_2 = [parent_2[:genome_length]]
+        child_2.extend([parent_1[genome_length:]])
+        return child_1, child_2
+
+    elif citer > crossover_barrier:
+        genome_length = ptr_list[random.randint(0, 6)]
+
+        child_1 = [parent_1[:genome_length]]
+        child_1.extend([parent_2[genome_length:]])
+        child_2 = [parent_2[:genome_length]]
+        child_2.extend([parent_1[genome_length:]])
+        return child_1, child_2
+
+# TODO ile bitów neogwać?
+
+
+def mutation(parent):
+    cancer = random.randint(0, len(parent))
+    child = parent
+    if child[cancer] == 1:
+        child[cancer] = 0
+    else:
+        child[cancer] = 1
+    return child
