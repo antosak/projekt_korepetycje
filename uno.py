@@ -134,7 +134,7 @@ example_kappa = (1, 0, 0, 0, 1)
 world = create_brave_new_world()
 
 
-def income_objective_function(solution: list = example_sol, kappa: list = example_kappa) -> float:
+def income_objective_function(solution: list = example_sol, kappa: list = example_kappa):
     """
     :param solution: something that crossover or mutation spitted out
     :param kappa: information from "kappa maker" - when we go back home
@@ -155,7 +155,7 @@ def income_objective_function(solution: list = example_sol, kappa: list = exampl
     return result
 
 
-def time_objective_function(solution: list = example_sol, kappa: list = example_kappa) -> float:
+def time_objective_function(solution: list = example_sol, kappa: list = example_kappa):
     """
     :param solution: solution: something that crossover or mutation spitted out
     :param kappa: information from "kappa maker" - when we go back home
@@ -212,10 +212,12 @@ def crossover(parent_1, parent_2, current_iter, ptr_list):
 
 
 def mutation(parent):
-    cancer = random.randint(0, len(parent))
+    number_of_cells = len(parent)//15+1
     child = parent
-    if child[cancer] == 1:
-        child[cancer] = 0
-    else:
-        child[cancer] = 1
+    for i in range(number_of_cells):
+        cancer = random.randint(0, len(parent))
+        if child[cancer] == 1:
+            child[cancer] = 0
+        else:
+            child[cancer] = 1
     return child
