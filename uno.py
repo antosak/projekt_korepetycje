@@ -59,7 +59,7 @@ class Client(object):
 
 
 # Checks whether a child (solution), that algorithm returned, is legal (within several severe limitations).
-def legal_child(Client_list, child, home_returns_vector) -> bool:
+def legal_child(client_list, child, home_returns_vector) -> bool:
     """
     :param client_list: list that function "create_brave_new_world" returns
     :param child: solution that algorithm (crossover or mutation) provides
@@ -69,16 +69,16 @@ def legal_child(Client_list, child, home_returns_vector) -> bool:
     income = 0
     for i in range(0, len(child)):
         if child[i] == 1:
-            income += Client_list[i].price
+            income += client_list[i].price
     if income > 350:
         return False
     id_list = []
     for i in range(0, len(child)):
         if child[i] == 1:
-            if Client_list[i].name in id_list:
+            if client_list[i].name in id_list:
                 return False
             else:
-                id_list.append(Client_list[i].name)
+                id_list.append(client_list[i].name)
     days_list = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']
     days_value_list = [0, 0, 0, 0, 0, 0, 0]
     for i in range(0, len(child)):
@@ -87,50 +87,50 @@ def legal_child(Client_list, child, home_returns_vector) -> bool:
                 if child[i+1] == 1:
                     if home_returns_vector[i] == 0:
                         client_time = 0
-                        client_time += Client_list[i].teaching_time
-                        client_time += (sqrt(((Client_list[i+1].coordinates[0] - Client_list[i].coordinates[0]) ** 2) +
-                                        ((Client_list[i+1].coordinates[1] - Client_list[i].coordinates[1]) ** 2)))/average_speed
-                        if Client_list[i+1].hour < Client_list[i].hour + client_time:
+                        client_time += client_list[i].teaching_time
+                        client_time += (sqrt(((client_list[i+1].coordinates[0] - client_list[i].coordinates[0]) ** 2) +
+                                        ((client_list[i+1].coordinates[1] - client_list[i].coordinates[1]) ** 2)))/average_speed
+                        if client_list[i+1].hour < client_list[i].hour + client_time:
                             return False
                     else:
-                        if Client_list[i].day == Client_list[i + 1].day:
+                        if client_list[i].day == client_list[i + 1].day:
                             client_time = 0
-                            client_time += Client_list[i].teaching_time
-                            client_time += (sqrt(((Client_list[i].coordinates[0] - our_home[0]) ** 2) +
-                                                 ((Client_list[i].coordinates[1] - our_home[1]) ** 2)))/average_speed
-                            client_time += (sqrt(((Client_list[i+1].coordinates[0] - our_home[0]) ** 2) +
-                                                 ((Client_list[i+1].coordinates[1] - our_home[1]) ** 2)))/average_speed
-                            if Client_list[i + 1].hour < Client_list[i].hour + client_time:
+                            client_time += client_list[i].teaching_time
+                            client_time += (sqrt(((client_list[i].coordinates[0] - our_home[0]) ** 2) +
+                                                 ((client_list[i].coordinates[1] - our_home[1]) ** 2)))/average_speed
+                            client_time += (sqrt(((client_list[i+1].coordinates[0] - our_home[0]) ** 2) +
+                                                 ((client_list[i+1].coordinates[1] - our_home[1]) ** 2)))/average_speed
+                            if client_list[i + 1].hour < client_list[i].hour + client_time:
                                 return False
-                            j = days_list.index(Client_list[i].day)
-                            days_value_list[j] += Client_list[i + 1].hour - (Client_list[i].hour + client_time)
+                            j = days_list.index(client_list[i].day)
+                            days_value_list[j] += client_list[i + 1].hour - (client_list[i].hour + client_time)
     last_coordinates = our_home
     total_time = 0
     for i in range(0, len(child)):
         if child[i] == 1:
-            j = days_list.index(Client_list[i].day)
-            days_value_list[j] += Client_list[i].teaching_time
-            days_value_list[j] += (sqrt(((Client_list[i].coordinates[0] - last_coordinates[0]) ** 2) +
-                                        ((Client_list[i].coordinates[1] - last_coordinates[1]) ** 2)))/average_speed
-            last_coordinates = Client_list[i].coordinates
+            j = days_list.index(client_list[i].day)
+            days_value_list[j] += client_list[i].teaching_time
+            days_value_list[j] += (sqrt(((client_list[i].coordinates[0] - last_coordinates[0]) ** 2) +
+                                        ((client_list[i].coordinates[1] - last_coordinates[1]) ** 2)))/average_speed
+            last_coordinates = client_list[i].coordinates
             if home_returns_vector[i] == 1:
                 last_coordinates = our_home
-                days_value_list[j] += (sqrt(((Client_list[i].coordinates[0] - last_coordinates[0]) ** 2) +
-                                            ((Client_list[i].coordinates[1] - last_coordinates[1]) ** 2)))/average_speed
+                days_value_list[j] += (sqrt(((client_list[i].coordinates[0] - last_coordinates[0]) ** 2) +
+                                            ((client_list[i].coordinates[1] - last_coordinates[1]) ** 2)))/average_speed
     for days in days_value_list:
         if days > 4:
             return False
         total_time += days
     for i in range(0, len(child)):
         if child[i] == 1:
-            total_time += Client_list[i].prep_time
+            total_time += client_list[i].prep_time
     if total_time > 28:
         return False
     return True
 
 
 # Based on the solution says when we go back home
-def kappa_maker(Client_list, child):
+def kappa_maker(client_list, child):
     """
     :param client_list: list that function "create_brave_new_world" returns
     :param child: solution that algorithm (crossover or mutation) provides
@@ -143,12 +143,12 @@ def kappa_maker(Client_list, child):
         else:
             if i+1 != len(child):
                 if child[i+1] == 1:
-                    if Client_list[i].day == Client_list[i+1].day:
+                    if client_list[i].day == client_list[i+1].day:
                         client_time = 0
-                        client_time += Client_list[i].teaching_time
-                        client_time += (sqrt(((Client_list[i + 1].coordinates[0] - Client_list[i].coordinates[0]) ** 2) +
-                                             ((Client_list[i + 1].coordinates[1] - Client_list[i].coordinates[1]) ** 2))) / average_speed
-                        client_time = Client_list[i + 1].hour - (Client_list[i].hour + client_time)
+                        client_time += client_list[i].teaching_time
+                        client_time += (sqrt(((client_list[i + 1].coordinates[0] - client_list[i].coordinates[0]) ** 2) +
+                                             ((client_list[i + 1].coordinates[1] - client_list[i].coordinates[1]) ** 2))) / average_speed
+                        client_time = client_list[i + 1].hour - (client_list[i].hour + client_time)
                         if client_time <= waiting_threshold:
                             kappa.append(0)
                         else:
