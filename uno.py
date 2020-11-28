@@ -189,8 +189,8 @@ res = final_objective_function()  # the more the better!
 crossover_barrier = 2
 
 
-def crossover(parent_1, parent_2, citer, ptr_list):
-    if citer <= crossover_barrier:  # number of iter
+def crossover(parent_1, parent_2, current_iter, ptr_list):
+    if current_iter <= crossover_barrier:  # number of iter
         genome_length = len(parent_1) // 2
 
         child_1 = [parent_1[:genome_length]]
@@ -199,7 +199,7 @@ def crossover(parent_1, parent_2, citer, ptr_list):
         child_2.extend([parent_1[genome_length:]])
         return child_1, child_2
 
-    elif citer > crossover_barrier:
+    elif current_iter > crossover_barrier:
         genome_length = ptr_list[random.randint(0, 6)]
 
         child_1 = [parent_1[:genome_length]]
