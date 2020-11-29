@@ -81,23 +81,25 @@ def legal_child(client_list, child, home_returns_vector) -> bool:
     days_value_list = [0, 0, 0, 0, 0, 0, 0]
     for i in range(0, len(child)):
         if child[i] == 1:
-            if i+1 != len(child):
-                if child[i+1] == 1:
+            if i + 1 != len(child):
+                if child[i + 1] == 1:
                     if home_returns_vector[i] == 0:
                         client_time = 0
                         client_time += client_list[i].teaching_time
-                        client_time += (sqrt(((client_list[i+1].coordinates[0] - client_list[i].coordinates[0]) ** 2) +
-                                        ((client_list[i+1].coordinates[1] - client_list[i].coordinates[1]) ** 2)))/average_speed
-                        if client_list[i+1].hour < client_list[i].hour + client_time:
+                        client_time += (sqrt(
+                            ((client_list[i + 1].coordinates[0] - client_list[i].coordinates[0]) ** 2) +
+                            ((client_list[i + 1].coordinates[1] - client_list[i].coordinates[1]) ** 2))) / average_speed
+                        if client_list[i + 1].hour < client_list[i].hour + client_time:
                             return False
                     else:
                         if client_list[i].day == client_list[i + 1].day:
                             client_time = 0
                             client_time += client_list[i].teaching_time
                             client_time += (sqrt(((client_list[i].coordinates[0] - our_home[0]) ** 2) +
-                                                 ((client_list[i].coordinates[1] - our_home[1]) ** 2)))/average_speed
-                            client_time += (sqrt(((client_list[i+1].coordinates[0] - our_home[0]) ** 2) +
-                                                 ((client_list[i+1].coordinates[1] - our_home[1]) ** 2)))/average_speed
+                                                 ((client_list[i].coordinates[1] - our_home[1]) ** 2))) / average_speed
+                            client_time += (sqrt(((client_list[i + 1].coordinates[0] - our_home[0]) ** 2) +
+                                                 ((client_list[i + 1].coordinates[1] - our_home[
+                                                     1]) ** 2))) / average_speed
                             if client_list[i + 1].hour < client_list[i].hour + client_time:
                                 return False
                             j = days_list.index(client_list[i].day)
@@ -109,12 +111,13 @@ def legal_child(client_list, child, home_returns_vector) -> bool:
             j = days_list.index(client_list[i].day)
             days_value_list[j] += client_list[i].teaching_time
             days_value_list[j] += (sqrt(((client_list[i].coordinates[0] - last_coordinates[0]) ** 2) +
-                                        ((client_list[i].coordinates[1] - last_coordinates[1]) ** 2)))/average_speed
+                                        ((client_list[i].coordinates[1] - last_coordinates[1]) ** 2))) / average_speed
             last_coordinates = client_list[i].coordinates
             if home_returns_vector[i] == 1:
                 last_coordinates = our_home
                 days_value_list[j] += (sqrt(((client_list[i].coordinates[0] - last_coordinates[0]) ** 2) +
-                                            ((client_list[i].coordinates[1] - last_coordinates[1]) ** 2)))/average_speed
+                                            ((client_list[i].coordinates[1] - last_coordinates[
+                                                1]) ** 2))) / average_speed
     for days in days_value_list:
         if days > 4:
             return False
@@ -139,13 +142,14 @@ def kappa_maker(client_list, child):
         if child[i] == 0:
             kappa.append(0)
         else:
-            if i+1 != len(child):
-                if child[i+1] == 1:
-                    if client_list[i].day == client_list[i+1].day:
+            if i + 1 != len(child):
+                if child[i + 1] == 1:
+                    if client_list[i].day == client_list[i + 1].day:
                         client_time = 0
                         client_time += client_list[i].teaching_time
-                        client_time += (sqrt(((client_list[i + 1].coordinates[0] - client_list[i].coordinates[0]) ** 2) +
-                                             ((client_list[i + 1].coordinates[1] - client_list[i].coordinates[1]) ** 2))) / average_speed
+                        client_time += (sqrt(
+                            ((client_list[i + 1].coordinates[0] - client_list[i].coordinates[0]) ** 2) +
+                            ((client_list[i + 1].coordinates[1] - client_list[i].coordinates[1]) ** 2))) / average_speed
                         client_time = client_list[i + 1].hour - (client_list[i].hour + client_time)
                         if client_time <= waiting_threshold:
                             kappa.append(0)
@@ -162,13 +166,13 @@ def kappa_maker(client_list, child):
 
 example_sol = (0, 1, 0, 1, 1)
 example_kappa = (1, 0, 0, 0, 1)
-world = create_brave_new_world()
 
 
-def income_objective_function(solution: list = example_sol, kappa: list = example_kappa):
+def income_objective_function(solution: list, kappa: list, world: list):
     """
     :param solution: something that crossover or mutation spitted out
     :param kappa: information from "kappa maker" - when we go back home
+    :param world: population
     :return: real number that tells how good in terms of income the solution is
     """
     income = []
@@ -186,10 +190,11 @@ def income_objective_function(solution: list = example_sol, kappa: list = exampl
     return result
 
 
-def time_objective_function(solution: list = example_sol, kappa: list = example_kappa):
+def time_objective_function(solution: list, kappa: list, world: list):
     """
     :param solution: something that crossover or mutation spitted out
     :param kappa: information from "kappa maker" - when we go back home
+    :param world: population
     :return: real number that tells how good in terms of time the solution is
     """
     time_spent = []
@@ -207,14 +212,12 @@ def time_objective_function(solution: list = example_sol, kappa: list = example_
     return result
 
 
-def final_objective_function(solution, kappa) -> float:
+def final_objective_function(solution, kappa, world) -> float:
     """
     :return: combination of income and time
     """
-    return income_objective_function(solution, kappa) / (time_objective_function(solution, kappa))
+    return income_objective_function(solution, kappa, world) / (time_objective_function(solution, kappa, world))
 
-
-res = final_objective_function(example_sol, example_kappa)  # the more the better!
 
 # number that says up to which iteration first type of crossover is more likely to happen
 crossover_barrier = 2
@@ -252,7 +255,7 @@ def mutation(parent):
     :param parent: Parent
     :return: Child
     """
-    number_of_cells = len(parent)//15+1
+    number_of_cells = len(parent) // 15 + 1
     child = parent
     for i in range(number_of_cells):
         cancer = random.randint(0, len(parent))

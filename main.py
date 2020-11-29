@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
 import uno
 import numpy as np
 number_of_iterations = 5
@@ -33,7 +33,7 @@ while len(current_population) < population_size:
     if uno.legal_child(client_list, population_member, kappa):
         current_population.append(population_member)
         kappa_population.append(kappa)
-        evaluation = uno.final_objective_function(population_member, kappa)
+        evaluations.append(uno.final_objective_function(population_member, kappa))
 
     test_counter += 1
 
@@ -41,7 +41,6 @@ print(test_counter)
 
 for curr_iter in range(number_of_iterations):
     rand = np.random.random_sample()
-    genetic_operation = ''
     if rand > 0.8:
         parent = np.random.randint(low=0, high=len(current_population))
     else:
