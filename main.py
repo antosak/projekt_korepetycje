@@ -1,14 +1,10 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-# import matplotlib.pyplot as plt
 import uno
 import numpy as np
-# avg_min = 0
-# avg_max = 0
-# itter = 0
-# for x in range(100):
-number_of_iterations = 2000
+
+number_of_iterations = 1000
 client_list = uno.create_brave_new_world('Tutoring3.xlsx')
 population_size = min(2 * len(client_list), 80)
 crossover_barrier = number_of_iterations // 10
@@ -44,17 +40,18 @@ while len(current_population) < population_size:
 
 # print(test_counter, '\n')
 
-print('basic score:\t', max(evaluations), '\n')
+print('initial score: ', max(evaluations))
+print('initial min: ', min(evaluations), '\n')
+
 probability = 0.8
 for curr_iter in range(number_of_iterations):
-    # print(curr_iter)
     rand = np.random.random_sample()
-    child_2 = None
-    if True:
-        # if rand > probability/(curr_iter+1):
+    if rand > probability/(curr_iter+1):  # chance for mutation increases over time
         parent = current_population[np.random.randint(low=0, high=len(current_population))]
         child_1 = uno.mutation(parent)
+        child_2 = None
         c1_kappa = uno.kappa_maker(client_list, child_1)
+        c2_kappa = None
         while not uno.legal_child(client_list, child_1, c1_kappa):
             parent = current_population[np.random.randint(low=0, high=len(current_population))]
             child_1 = uno.mutation(parent)
@@ -65,8 +62,7 @@ for curr_iter in range(number_of_iterations):
         child_1, child_2 = uno.crossover(parent_1, parent_2, curr_iter, day_ptr_list, crossover_barrier)
         c1_kappa = uno.kappa_maker(client_list, child_1)
         c2_kappa = uno.kappa_maker(client_list, child_2)
-        while not uno.legal_child(client_list, child_1, c1_kappa) \
-                or not uno.legal_child(client_list, child_2, c2_kappa):
+        while not uno.legal_child(client_list, child_1, c1_kappa) or not uno.legal_child(client_list, child_2, c2_kappa):
             parent_1 = current_population[np.random.randint(low=0, high=len(current_population))]
             parent_2 = current_population[np.random.randint(low=0, high=len(current_population))]
             child_1, child_2 = uno.crossover(parent_1, parent_2, curr_iter, day_ptr_list, crossover_barrier)
@@ -87,11 +83,5 @@ for curr_iter in range(number_of_iterations):
             kappa_population[minimum[1]] = c2_kappa
             evaluations[minimum[1]] = c2_eval
 
-print('final score:\t', max(evaluations), '\n')
-print('final min:\t', min(evaluations))
-#     print(itter)
-#     itter += 1
-#     avg_min += min(evaluations)
-#     avg_max += max(evaluations)
-#
-# print('min:\t', avg_min/100, '\tmax:\t', avg_max/100)
+print('final score: ', max(evaluations))
+print('final min: ', min(evaluations))

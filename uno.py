@@ -4,7 +4,6 @@
 import numpy as np
 from math import sqrt
 import pandas as pd
-import random
 
 # constants
 default_path = 'Tutoring.xlsx'
@@ -162,10 +161,6 @@ def kappa_maker(client_list, child):
             else:
                 kappa.append(1)
     return kappa
-
-
-example_sol = (0, 1, 0, 1, 1)
-example_kappa = (1, 0, 0, 0, 1)
 
 
 def income_objective_function(solution: list, kappa: list, world: list):
