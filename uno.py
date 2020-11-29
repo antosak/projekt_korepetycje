@@ -255,7 +255,7 @@ def mutation(parent):
     :param parent: Parent
     :return: Child
     """
-    number_of_cells = len(parent) // 15 + 1
+    number_of_cells = min(len(parent) // 10, 1)
     child = parent
     for i in range(number_of_cells):
         cancer = np.random.randint(low=0, high=len(parent))
