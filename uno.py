@@ -188,7 +188,7 @@ def income_objective_function(solution: list = example_sol, kappa: list = exampl
 
 def time_objective_function(solution: list = example_sol, kappa: list = example_kappa):
     """
-    :param solution: solution: something that crossover or mutation spitted out
+    :param solution: something that crossover or mutation spitted out
     :param kappa: information from "kappa maker" - when we go back home
     :return: real number that tells how good in terms of time the solution is
     """
@@ -207,14 +207,14 @@ def time_objective_function(solution: list = example_sol, kappa: list = example_
     return result
 
 
-def final_objective_function() -> float:
+def final_objective_function(solution, kappa) -> float:
     """
     :return: combination of income and time
     """
-    return income_objective_function() / (time_objective_function() + 1)
+    return income_objective_function(solution, kappa) / (time_objective_function(solution, kappa))
 
 
-res = final_objective_function()  # the more the better!
+res = final_objective_function(example_sol, example_kappa)  # the more the better!
 
 # number that says up to which iteration first type of crossover is more likely to happen
 crossover_barrier = 2
@@ -245,8 +245,6 @@ def crossover(parent_1, parent_2, current_iter, ptr_list):
         child_2 = [parent_2[:genome_length]]
         child_2.extend([parent_1[genome_length:]])
         return child_1, child_2
-
-# TODO ile bitów neogwać?
 
 
 def mutation(parent):

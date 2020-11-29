@@ -28,8 +28,8 @@ kappa_population = []
 test_counter = 0
 while len(current_population) < population_size:
     population_member = np.random.randint(2, size=len(client_list))
-    kappa = uno.kappa_maker(client_list,population_member)
-    if uno.legal_child(client_list,population_member,kappa):
+    kappa = uno.kappa_maker(client_list, population_member)
+    if uno.legal_child(client_list, population_member, kappa):
         current_population.append(population_member)
         kappa_population.append(kappa)
     test_counter += 1
@@ -44,6 +44,3 @@ for curr_iter in range(number_of_iterations):
     else:
         parent_1 = np.random.randint(low=0, high=len(current_population))
         parent_2 = np.random.randint(low=0, high=len(current_population))
-
-
-
