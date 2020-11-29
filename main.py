@@ -4,7 +4,7 @@
 # import matplotlib.pyplot as plt
 import uno
 import numpy as np
-number_of_iterations = 5
+number_of_iterations = 50
 client_list = uno.create_brave_new_world('Tutoring3.xlsx')
 population_size = min(2 * len(client_list), 80)
 crossover_barrier = number_of_iterations // 5
@@ -39,6 +39,8 @@ while len(current_population) < population_size:
     test_counter += 1
 
 print(test_counter, '\n')
+
+print('basic score:\t', max(evaluations), '\n')
 
 for curr_iter in range(number_of_iterations):
     rand = np.random.random_sample()
@@ -82,3 +84,4 @@ for curr_iter in range(number_of_iterations):
             kappa_population[minimum[1]] = c2_kappa
             evaluations[minimum[1]] = c2_eval
 
+print('final score:\t', max(evaluations))
