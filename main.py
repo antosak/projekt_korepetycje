@@ -25,6 +25,7 @@ for i in range(len(client_list)):
 
 current_population = []
 kappa_population = []
+evaluations = []
 test_counter = 0
 while len(current_population) < population_size:
     population_member = np.random.randint(2, size=len(client_list))
@@ -32,6 +33,8 @@ while len(current_population) < population_size:
     if uno.legal_child(client_list, population_member, kappa):
         current_population.append(population_member)
         kappa_population.append(kappa)
+        evaluation = uno.final_objective_function(population_member, kappa)
+
     test_counter += 1
 
 print(test_counter)
