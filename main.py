@@ -44,6 +44,7 @@ print('basic score:\t', max(evaluations), '\n')
 
 for curr_iter in range(number_of_iterations):
     rand = np.random.random_sample()
+    child_2 = None
     if rand > 0.8:
         parent = current_population[np.random.randint(low=0, high=len(current_population))]
         child_1 = uno.mutation(parent)
@@ -55,7 +56,7 @@ for curr_iter in range(number_of_iterations):
     else:
         parent_1 = current_population[np.random.randint(low=0, high=len(current_population))]
         parent_2 = current_population[np.random.randint(low=0, high=len(current_population))]
-        while parent_2 == parent_1:
+        while parent_2 is parent_1:
             parent_2 = current_population[np.random.randint(low=0, high=len(current_population))]
         child_1, child_2 = uno.crossover(parent_1, parent_2, curr_iter, day_ptr_list, crossover_barrier)
         c1_kappa = uno.kappa_maker(client_list, child_1)
@@ -64,7 +65,7 @@ for curr_iter in range(number_of_iterations):
                 or not uno.legal_child(client_list, child_2, c2_kappa):
             parent_1 = current_population[np.random.randint(low=0, high=len(current_population))]
             parent_2 = current_population[np.random.randint(low=0, high=len(current_population))]
-            while parent_2 == parent_1:
+            while parent_2 is parent_1:
                 parent_2 = current_population[np.random.randint(low=0, high=len(current_population))]
             child_1, child_2 = uno.crossover(parent_1, parent_2, curr_iter, day_ptr_list, crossover_barrier)
             c1_kappa = uno.kappa_maker(client_list, child_1)

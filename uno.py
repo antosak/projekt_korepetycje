@@ -12,7 +12,7 @@ fuel_consumption = 8  # l/100km
 average_speed = 50  # km/h
 fuel_cost = 4.20  # PlN/l
 fuel_coeff = (fuel_consumption / 100) * fuel_cost  # useful thing
-our_home = (5, 5)
+our_home = [5, 5]
 waiting_threshold = 0.5
 
 
@@ -228,23 +228,26 @@ def crossover(parent_1, parent_2, current_iter, ptr_list, crossover_barrier):
     :param crossover_barrier: number that says up to which iteration first type of crossover is more likely to happen
     :return: Child No.1, Child No.2
     """
+    if isinstance(parent_1, np.ndarray):
+        parent_1 = parent_1.tolist()
+    if isinstance(parent_2, np.ndarray):
+        parent_2 = parent_2.tolist()
     if current_iter <= crossover_barrier:  # number of iter
         genome_length = len(parent_1) // 2
-
         child_1 = [parent_1[:genome_length]]
         child_1.extend([parent_2[genome_length:]])
         child_2 = [parent_2[:genome_length]]
         child_2.extend([parent_1[genome_length:]])
-        return child_1, child_2
+        return child_1[0]+child_1[1], child_2[0]+child_2[1]
 
     elif current_iter > crossover_barrier:
-        genome_length = ptr_list[random.randint(0, len(ptr_list))]
+        genome_length = ptr_list[np.random.randint(low=0, high=len(ptr_list))]
 
         child_1 = [parent_1[:genome_length]]
         child_1.extend([parent_2[genome_length:]])
         child_2 = [parent_2[:genome_length]]
         child_2.extend([parent_1[genome_length:]])
-        return child_1, child_2
+        return child_1[0]+child_1[1], child_2[0]+child_2[1]
 
 
 def mutation(parent):
@@ -255,7 +258,7 @@ def mutation(parent):
     number_of_cells = len(parent) // 15 + 1
     child = parent
     for i in range(number_of_cells):
-        cancer = random.randint(0, len(parent))
+        cancer = np.random.randint(low=0, high=len(parent))
         if child[cancer] == 1:
             child[cancer] = 0
         else:
