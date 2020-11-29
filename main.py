@@ -28,6 +28,7 @@ current_population = []
 kappa_population = []
 evaluations = []
 test_counter = 0
+max_ones = min(35, len(client_list))
 while len(current_population) < population_size:
     population_member = np.random.randint(2, size=len(client_list))
     kappa = uno.kappa_maker(client_list, population_member)
