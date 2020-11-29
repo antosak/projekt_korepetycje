@@ -20,9 +20,9 @@ def read_data(path: str = default_path):
     return data
 
 
-# Returns list of instances of class Client in chronological order in a week.
 def create_brave_new_world(source: str = default_path) -> list:
     """
+    Returns list of instances of class Client in chronological order in a week.
     :param source: path to a file that provides data
     :return: ordered list of all the meetings and information about them
     """
@@ -37,8 +37,10 @@ def create_brave_new_world(source: str = default_path) -> list:
     return all_the_clients
 
 
-# Somewhat surprisingly class Client represents a single date with a fool, not a fool itself.
 class Client(object):
+    """
+    Somewhat surprisingly class Client represents a single date with a fool, not a fool itself.
+    """
     def __init__(self, name, price, coordinates, prep_time, teaching_time, hour, day):
         self.name = name
         self.price = price
@@ -55,9 +57,9 @@ class Client(object):
         pass
 
 
-# Checks whether a child (solution), that algorithm returned, is legal (within several severe limitations).
 def legal_child(client_list, child, home_returns_vector) -> bool:
     """
+    Checks whether a child (solution), that algorithm returned, is legal (within several severe limitations).
     :param client_list: list that function "create_brave_new_world" returns
     :param child: solution that algorithm (crossover or mutation) provides
     :param home_returns_vector: list that function "kappa_maker" provides
@@ -129,9 +131,9 @@ def legal_child(client_list, child, home_returns_vector) -> bool:
     return True
 
 
-# Based on the solution says when we go back home
 def kappa_maker(client_list, child):
     """
+    Based on the solution says when we go back home
     :param client_list: list that function "create_brave_new_world" returns
     :param child: solution that algorithm (crossover or mutation) provides
     :return: binary vector, that says when we go back home
@@ -214,13 +216,31 @@ def final_objective_function(solution, kappa, world) -> float:
     return income_objective_function(solution, kappa, world) / (time_objective_function(solution, kappa, world))
 
 
-def crossover(parent_1, parent_2, current_iter, ptr_list, crossover_barrier):
+def step_child(child, max_ones):
+    """
+    Function prevents earning more than 350/week and simplifies calculations for large populations
+    :param child: child
+    :param max_ones: maximum number of ones (depends on input data)
+    :return:
+    """
+    ones_ptr = []
+    for i in range(len(child)):
+        if child[i] == 1:
+            ones_ptr.append(i)
+    while np.sum(child) > max_ones:
+        index = np.random.randint(low=0, high=len(ones_ptr))
+        child[ones_ptr[index]] = (child[ones_ptr[index]] + 1) % 2
+    return child
+
+
+def crossover(parent_1, parent_2, current_iter, ptr_list, crossover_barrier, max_ones):
     """
     :param parent_1: Parent No.1
     :param parent_2: Parent No.2
     :param current_iter: Current iteration number
     :param ptr_list: List of pointers to week days
     :param crossover_barrier: number that says up to which iteration first type of crossover is more likely to happen
+    :param max_ones: maximum number of ones (depends on input data)
     :return: Child No.1, Child No.2
     """
     if isinstance(parent_1, np.ndarray):
@@ -233,7 +253,11 @@ def crossover(parent_1, parent_2, current_iter, ptr_list, crossover_barrier):
         child_1.extend([parent_2[genome_length:]])
         child_2 = [parent_2[:genome_length]]
         child_2.extend([parent_1[genome_length:]])
-        return child_1[0]+child_1[1], child_2[0]+child_2[1]
+        child_1 = child_1[0] + child_1[1]
+        child_2 = child_2[0] + child_2[1]
+        child_1 = step_child(child_1, max_ones)
+        child_2 = step_child(child_2, max_ones)
+        return child_1, child_2
 
     elif current_iter > crossover_barrier:
         genome_length = ptr_list[np.random.randint(low=0, high=len(ptr_list))]
@@ -242,21 +266,47 @@ def crossover(parent_1, parent_2, current_iter, ptr_list, crossover_barrier):
         child_1.extend([parent_2[genome_length:]])
         child_2 = [parent_2[:genome_length]]
         child_2.extend([parent_1[genome_length:]])
-        return child_1[0]+child_1[1], child_2[0]+child_2[1]
+        child_1 = child_1[0] + child_1[1]
+        child_2 = child_2[0] + child_2[1]
+        child_1 = step_child(child_1, max_ones)
+        child_2 = step_child(child_2, max_ones)
+        return child_1, child_2
 
 
-def mutation(parent):
+def mutation(parent, max_ones):
     """
     :param parent: Parent
+    :param max_ones: maximum number of ones (depends on input data)
     :return: Child
     """
-    max_number_of_cells = max(len(parent) // 10, 1)
-    number_of_cancer_cells = np.random.randint(low=1, high=max_number_of_cells)
+    number_of_cancer_cells = np.random.randint(low=1, high=3)
     child = parent
-    for i in range(number_of_cancer_cells):
-        cancer = np.random.randint(low=0, high=len(parent))
-        if child[cancer] == 1:
-            child[cancer] = 0
-        else:
-            child[cancer] = 1
+    ones_ptr = []
+    for i in range(len(child)):
+        if child[i] == 1:
+            ones_ptr.append(i)
+    if np.random.randint(2, size=1) == 1:  # 50/50
+        for i in range(number_of_cancer_cells):
+            index = np.random.randint(low=0, high=len(child))
+            child[index] = (child[index] + 1) % 2
+            child = step_child(child, max_ones)
+    else:
+        for i in range(number_of_cancer_cells):
+            if len(ones_ptr) != 0:
+                index = np.random.randint(low=0, high=len(ones_ptr))
+                child[ones_ptr[index]] = (child[ones_ptr[index]] + 1) % 2
     return child
+
+
+def definitly_not_a_random_member(max_ones, client_list):
+    """
+    Generates a random member-vector that will more likely pass legality test because we can not earn more than 350/week
+    :param max_ones: maximum number of ones
+    :param client_list: population
+    :return:
+    """
+    population_member = np.zeros(len(client_list), dtype=int)
+    number_of_ones = np.random.randint(low=1, high=max_ones)
+    population_member[:number_of_ones] = 1
+    np.random.shuffle(population_member)
+    return population_member.tolist()

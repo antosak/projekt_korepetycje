@@ -4,11 +4,10 @@
 import uno
 import numpy as np
 
-number_of_iterations = 1000
-client_list = uno.create_brave_new_world('Tutoring4.xlsx')
+number_of_iterations = 2000
+client_list = uno.create_brave_new_world('Tutoring500 linear.xlsx')
 population_size = min(2 * len(client_list), 50)
 crossover_barrier = number_of_iterations // 10
-data = uno.read_data('Tutoring4.xlsx')
 day_ptr_list = [0]
 for i in range(len(client_list)):
     if client_list[i].day == 'tuesday' and client_list[i - 1].day == 'monday':
@@ -28,9 +27,9 @@ current_population = []
 kappa_population = []
 evaluations = []
 test_counter = 0
-max_ones = min(35, len(client_list))
+max_ones = min(18, len(client_list))
 while len(current_population) < population_size:
-    population_member = np.random.randint(2, size=len(client_list))
+    population_member = uno.definitly_not_a_random_member(max_ones, client_list)
     kappa = uno.kappa_maker(client_list, population_member)
     if uno.legal_child(client_list, population_member, kappa):
         current_population.append(population_member)
@@ -49,24 +48,25 @@ for curr_iter in range(number_of_iterations):
     rand = np.random.random_sample()
     if rand > probability/(curr_iter+1):  # chance for mutation increases over time
         parent = current_population[np.random.randint(low=0, high=len(current_population))]
-        child_1 = uno.mutation(parent)
+        child_1 = uno.mutation(parent, max_ones)
         child_2 = None
         c1_kappa = uno.kappa_maker(client_list, child_1)
         c2_kappa = None
         while not uno.legal_child(client_list, child_1, c1_kappa):
             parent = current_population[np.random.randint(low=0, high=len(current_population))]
-            child_1 = uno.mutation(parent)
+            child_1 = uno.mutation(parent, max_ones)
             c1_kappa = uno.kappa_maker(client_list, child_1)
     else:
         parent_1 = current_population[np.random.randint(low=0, high=len(current_population))]
         parent_2 = current_population[np.random.randint(low=0, high=len(current_population))]
-        child_1, child_2 = uno.crossover(parent_1, parent_2, curr_iter, day_ptr_list, crossover_barrier)
+        child_1, child_2 = uno.crossover(parent_1, parent_2, curr_iter, day_ptr_list, crossover_barrier, max_ones)
         c1_kappa = uno.kappa_maker(client_list, child_1)
         c2_kappa = uno.kappa_maker(client_list, child_2)
-        while not uno.legal_child(client_list, child_1, c1_kappa) or not uno.legal_child(client_list, child_2, c2_kappa):
+        while not uno.legal_child(client_list, child_1, c1_kappa) \
+                or not uno.legal_child(client_list, child_2, c2_kappa):
             parent_1 = current_population[np.random.randint(low=0, high=len(current_population))]
             parent_2 = current_population[np.random.randint(low=0, high=len(current_population))]
-            child_1, child_2 = uno.crossover(parent_1, parent_2, curr_iter, day_ptr_list, crossover_barrier)
+            child_1, child_2 = uno.crossover(parent_1, parent_2, curr_iter, day_ptr_list, crossover_barrier, max_ones)
             c1_kappa = uno.kappa_maker(client_list, child_1)
             c2_kappa = uno.kappa_maker(client_list, child_2)
 
@@ -83,6 +83,7 @@ for curr_iter in range(number_of_iterations):
             current_population[minimum[1]] = child_2
             kappa_population[minimum[1]] = c2_kappa
             evaluations[minimum[1]] = c2_eval
-
+print('final index: ', evaluations.index(max(evaluations)))
+print('sum ones:', np.sum(current_population[evaluations.index(max(evaluations))]))
 print('final score: ', max(evaluations))
 print('final min: ', min(evaluations))
