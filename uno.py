@@ -209,7 +209,7 @@ def time_objective_function(solution: list, kappa: list, world: list):
             last_visit = elem.coordinates
         counter += 1
     result = np.dot(solution, time_spent)
-    return result
+    return result if result > 0.5 else 1000
 
 
 def final_objective_function(solution, kappa, world) -> float:
