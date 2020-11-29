@@ -8,7 +8,7 @@ number_of_iterations = 1000
 client_list = uno.create_brave_new_world('Tutoring4.xlsx')
 population_size = min(2 * len(client_list), 50)
 crossover_barrier = number_of_iterations // 10
-
+data = uno.read_data('Tutoring4.xlsx')
 day_ptr_list = [0]
 for i in range(len(client_list)):
     if client_list[i].day == 'tuesday' and client_list[i - 1].day == 'monday':
