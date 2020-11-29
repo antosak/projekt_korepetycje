@@ -6,7 +6,7 @@ import numpy as np
 
 number_of_iterations = 1000
 client_list = uno.create_brave_new_world('Tutoring4.xlsx')
-population_size = min(2 * len(client_list), 80)
+population_size = min(2 * len(client_list), 50)
 crossover_barrier = number_of_iterations // 10
 
 day_ptr_list = [0]
@@ -36,9 +36,9 @@ while len(current_population) < population_size:
         kappa_population.append(kappa)
         evaluations.append(uno.final_objective_function(population_member, kappa, client_list))
 
-    # test_counter += 1
+    test_counter += 1
 
-# print(test_counter, '\n')
+print(test_counter, '\n')
 
 print('initial score: ', max(evaluations))
 print('initial min: ', min(evaluations), '\n')
