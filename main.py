@@ -4,24 +4,28 @@
 # import matplotlib.pyplot as plt
 import uno
 import numpy as np
-number_of_iterations = 10000
+# avg_min = 0
+# avg_max = 0
+# itter = 0
+# for x in range(100):
+number_of_iterations = 2000
 client_list = uno.create_brave_new_world('Tutoring3.xlsx')
 population_size = min(2 * len(client_list), 80)
-crossover_barrier = number_of_iterations // 5
+crossover_barrier = number_of_iterations // 10
 
 day_ptr_list = [0]
 for i in range(len(client_list)):
-    if client_list[i].day == 'tuesday' and client_list[i-1].day == 'monday':
+    if client_list[i].day == 'tuesday' and client_list[i - 1].day == 'monday':
         day_ptr_list.append(i)
-    elif client_list[i].day == 'wednesday' and client_list[i-1].day == 'tuesday':
+    elif client_list[i].day == 'wednesday' and client_list[i - 1].day == 'tuesday':
         day_ptr_list.append(i)
-    elif client_list[i].day == 'thursday' and client_list[i-1].day == 'wednesday':
+    elif client_list[i].day == 'thursday' and client_list[i - 1].day == 'wednesday':
         day_ptr_list.append(i)
-    elif client_list[i].day == 'friday' and client_list[i-1].day == 'thursday':
+    elif client_list[i].day == 'friday' and client_list[i - 1].day == 'thursday':
         day_ptr_list.append(i)
-    elif client_list[i].day == 'saturday' and client_list[i-1].day == 'friday':
+    elif client_list[i].day == 'saturday' and client_list[i - 1].day == 'friday':
         day_ptr_list.append(i)
-    elif client_list[i].day == 'sunday' and client_list[i-1].day == 'saturday':
+    elif client_list[i].day == 'sunday' and client_list[i - 1].day == 'saturday':
         day_ptr_list.append(i)
 
 current_population = []
@@ -36,9 +40,9 @@ while len(current_population) < population_size:
         kappa_population.append(kappa)
         evaluations.append(uno.final_objective_function(population_member, kappa, client_list))
 
-    test_counter += 1
+    # test_counter += 1
 
-print(test_counter, '\n')
+# print(test_counter, '\n')
 
 print('basic score:\t', max(evaluations), '\n')
 probability = 0.8
@@ -47,6 +51,7 @@ for curr_iter in range(number_of_iterations):
     rand = np.random.random_sample()
     child_2 = None
     if True:
+        # if rand > probability/(curr_iter+1):
         parent = current_population[np.random.randint(low=0, high=len(current_population))]
         child_1 = uno.mutation(parent)
         c1_kappa = uno.kappa_maker(client_list, child_1)
@@ -57,8 +62,6 @@ for curr_iter in range(number_of_iterations):
     else:
         parent_1 = current_population[np.random.randint(low=0, high=len(current_population))]
         parent_2 = current_population[np.random.randint(low=0, high=len(current_population))]
-        while parent_2 is parent_1:
-            parent_2 = current_population[np.random.randint(low=0, high=len(current_population))]
         child_1, child_2 = uno.crossover(parent_1, parent_2, curr_iter, day_ptr_list, crossover_barrier)
         c1_kappa = uno.kappa_maker(client_list, child_1)
         c2_kappa = uno.kappa_maker(client_list, child_2)
@@ -66,8 +69,6 @@ for curr_iter in range(number_of_iterations):
                 or not uno.legal_child(client_list, child_2, c2_kappa):
             parent_1 = current_population[np.random.randint(low=0, high=len(current_population))]
             parent_2 = current_population[np.random.randint(low=0, high=len(current_population))]
-            while parent_2 is parent_1:
-                parent_2 = current_population[np.random.randint(low=0, high=len(current_population))]
             child_1, child_2 = uno.crossover(parent_1, parent_2, curr_iter, day_ptr_list, crossover_barrier)
             c1_kappa = uno.kappa_maker(client_list, child_1)
             c2_kappa = uno.kappa_maker(client_list, child_2)
@@ -86,4 +87,11 @@ for curr_iter in range(number_of_iterations):
             kappa_population[minimum[1]] = c2_kappa
             evaluations[minimum[1]] = c2_eval
 
-print('final score:\t', max(evaluations))
+print('final score:\t', max(evaluations), '\n')
+print('final min:\t', min(evaluations))
+#     print(itter)
+#     itter += 1
+#     avg_min += min(evaluations)
+#     avg_max += max(evaluations)
+#
+# print('min:\t', avg_min/100, '\tmax:\t', avg_max/100)
