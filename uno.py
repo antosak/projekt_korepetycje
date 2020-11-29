@@ -297,7 +297,7 @@ def mutation(parent, max_ones):
                 child[ones_ptr[index]] = (child[ones_ptr[index]] + 1) % 2
     return child
 
-
+# zakładając minimalną stawkę 20 polskich złociszy/0.5h i maksimum tygodniowe 350 zł. Nie możemy mieć więcej niż 18 klientów
 def definitly_not_a_random_member(max_ones, client_list):
     """
     Generates a random member-vector that will more likely pass legality test because we can not earn more than 350/week
