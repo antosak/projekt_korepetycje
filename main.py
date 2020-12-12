@@ -3,8 +3,9 @@
 
 import uno
 import numpy as np
+from copy import deepcopy
 
-number_of_iterations = 5000
+number_of_iterations = 10000
 client_list = uno.create_brave_new_world('Tutoring500nonlinear.xlsx')
 population_size = min(2 * len(client_list), 50)
 crossover_barrier = number_of_iterations // 10
@@ -47,42 +48,42 @@ probability = 0.8
 for curr_iter in range(number_of_iterations):
     rand = np.random.random_sample()
     if rand > probability/(curr_iter+1):  # chance for mutation increases over time
-        parent = current_population[np.random.randint(low=0, high=len(current_population))]
+        parent = deepcopy(current_population[np.random.randint(low=0, high=len(current_population))])
         child_1 = uno.mutation(parent, max_ones)
         child_2 = None
         c1_kappa = uno.kappa_maker(client_list, child_1)
         c2_kappa = None
         while not uno.legal_child(client_list, child_1, c1_kappa):
-            parent = current_population[np.random.randint(low=0, high=len(current_population))]
+            parent = deepcopy(current_population[np.random.randint(low=0, high=len(current_population))])
             child_1 = uno.mutation(parent, max_ones)
             c1_kappa = uno.kappa_maker(client_list, child_1)
     else:
-        parent_1 = current_population[np.random.randint(low=0, high=len(current_population))]
-        parent_2 = current_population[np.random.randint(low=0, high=len(current_population))]
+        parent_1 = deepcopy(current_population[np.random.randint(low=0, high=len(current_population))])
+        parent_2 = deepcopy(current_population[np.random.randint(low=0, high=len(current_population))])
         child_1, child_2 = uno.crossover(parent_1, parent_2, curr_iter, day_ptr_list, crossover_barrier, max_ones)
         c1_kappa = uno.kappa_maker(client_list, child_1)
         c2_kappa = uno.kappa_maker(client_list, child_2)
         while not (uno.legal_child(client_list, child_1, c1_kappa)
                    and uno.legal_child(client_list, child_2, c2_kappa)):
-            parent_1 = current_population[np.random.randint(low=0, high=len(current_population))]
-            parent_2 = current_population[np.random.randint(low=0, high=len(current_population))]
+            parent_1 = deepcopy(current_population[np.random.randint(low=0, high=len(current_population))])
+            parent_2 = deepcopy(current_population[np.random.randint(low=0, high=len(current_population))])
             child_1, child_2 = uno.crossover(parent_1, parent_2, curr_iter, day_ptr_list, crossover_barrier, max_ones)
             c1_kappa = uno.kappa_maker(client_list, child_1)
             c2_kappa = uno.kappa_maker(client_list, child_2)
 
     c1_eval = uno.final_objective_function(child_1, c1_kappa, client_list)
-    minimum = (min(evaluations), evaluations.index(min(evaluations)))
-    if c1_eval > minimum[0]:
-        current_population[minimum[1]] = child_1
-        kappa_population[minimum[1]] = c1_kappa
-        evaluations[minimum[1]] = c1_eval
+    minimum_value, minimum_ptr = min(evaluations), evaluations.index(min(evaluations))
+    if c1_eval > minimum_value:
+        current_population[minimum_ptr] = child_1
+        kappa_population[minimum_ptr] = c1_kappa
+        evaluations[minimum_ptr] = c1_eval
     if child_2 is not None:
         c2_eval = uno.final_objective_function(child_2, c2_kappa, client_list)
         minimum = (min(evaluations), evaluations.index(min(evaluations)))
-        if c2_eval > minimum[0]:
-            current_population[minimum[1]] = child_2
-            kappa_population[minimum[1]] = c2_kappa
-            evaluations[minimum[1]] = c2_eval
+        if c2_eval > minimum_value:
+            current_population[minimum_ptr] = child_2
+            kappa_population[minimum_ptr] = c2_kappa
+            evaluations[minimum_ptr] = c2_eval
 
 
 print('final index: ', evaluations.index(max(evaluations)))
@@ -94,3 +95,7 @@ for i in range(len(current_population[evaluations.index(max(evaluations))])):
 print(ones_ptr)
 print('final score: ', max(evaluations))
 print('final min: ', min(evaluations))
+income = 0
+for elem in ones_ptr:
+    income += client_list[elem].price
+print(income)

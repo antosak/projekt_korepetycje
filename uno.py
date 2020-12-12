@@ -4,10 +4,10 @@
 import numpy as np
 from math import sqrt
 import pandas as pd
-
+from copy import deepcopy
 # constants
 default_path = 'Tutoring.xlsx'
-fuel_consumption = 8  # l/100km
+fuel_consumption = 8  # l/100km``
 average_speed = 50  # km/h
 fuel_cost = 4.20  # PlN/l
 fuel_coeff = (fuel_consumption / 100) * fuel_cost  # useful thing
@@ -216,7 +216,7 @@ def final_objective_function(solution, kappa, world) -> float:
     return income_objective_function(solution, kappa, world) / (time_objective_function(solution, kappa, world))
 
 
-def step_child(child, max_ones):
+def half_legality_test(child, max_ones):
     """
     Function prevents earning more than 350/week and simplifies calculations for large populations
     :param child: child
@@ -233,7 +233,7 @@ def step_child(child, max_ones):
     return child
 
 
-def crossover(parent_1, parent_2, current_iter, ptr_list, crossover_barrier, max_ones):
+def crossover(par_1, par_2, current_iter, ptr_list, crossover_barrier, max_ones):
     """
     :param parent_1: Parent No.1
     :param parent_2: Parent No.2
@@ -243,10 +243,9 @@ def crossover(parent_1, parent_2, current_iter, ptr_list, crossover_barrier, max
     :param max_ones: maximum number of ones (depends on input data)
     :return: Child No.1, Child No.2
     """
-    if isinstance(parent_1, np.ndarray):
-        parent_1 = parent_1.tolist()
-    if isinstance(parent_2, np.ndarray):
-        parent_2 = parent_2.tolist()
+    parent_1 = deepcopy(par_1)
+    parent_2 = deepcopy(par_2)
+
     if current_iter <= crossover_barrier:  # number of iter
         genome_length = len(parent_1) // 2
         child_1 = [parent_1[:genome_length]]
@@ -255,8 +254,8 @@ def crossover(parent_1, parent_2, current_iter, ptr_list, crossover_barrier, max
         child_2.extend([parent_1[genome_length:]])
         child_1 = child_1[0] + child_1[1]
         child_2 = child_2[0] + child_2[1]
-        child_1 = step_child(child_1, max_ones)
-        child_2 = step_child(child_2, max_ones)
+        child_1 = half_legality_test(child_1, max_ones)
+        child_2 = half_legality_test(child_2, max_ones)
         return child_1, child_2
 
     elif current_iter > crossover_barrier:
@@ -268,8 +267,8 @@ def crossover(parent_1, parent_2, current_iter, ptr_list, crossover_barrier, max
         child_2.extend([parent_1[genome_length:]])
         child_1 = child_1[0] + child_1[1]
         child_2 = child_2[0] + child_2[1]
-        child_1 = step_child(child_1, max_ones)
-        child_2 = step_child(child_2, max_ones)
+        child_1 = half_legality_test(child_1, max_ones)
+        child_2 = half_legality_test(child_2, max_ones)
         return child_1, child_2
 
 
@@ -280,7 +279,7 @@ def mutation(parent, max_ones):
     :return: Child
     """
     number_of_cancer_cells = np.random.randint(low=1, high=3)
-    child = parent
+    child = deepcopy(parent)
     ones_ptr = []
     for i in range(len(child)):
         if child[i] == 1:
@@ -289,7 +288,7 @@ def mutation(parent, max_ones):
         for i in range(number_of_cancer_cells):
             index = np.random.randint(low=0, high=len(child))
             child[index] = (child[index] + 1) % 2
-            child = step_child(child, max_ones)
+            child = half_legality_test(child, max_ones)
     else:
         for i in range(number_of_cancer_cells):
             if len(ones_ptr) != 0:
@@ -297,7 +296,7 @@ def mutation(parent, max_ones):
                 child[ones_ptr[index]] = (child[ones_ptr[index]] + 1) % 2
     return child
 
-# zakładając minimalną stawkę 20 polskich złociszy/0.5h i maksimum tygodniowe 350 zł. Nie możemy mieć więcej niż 18 klientów
+
 def definitly_not_a_random_member(max_ones, client_list):
     """
     Generates a random member-vector that will more likely pass legality test because we can not earn more than 350/week
