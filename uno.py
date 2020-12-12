@@ -206,7 +206,7 @@ def time_objective_function(solution: list, kappa: list, world: list):
             last_visit = elem.coordinates
         counter += 1
     result = np.dot(solution, time_spent)
-    return result if result > 0.5 else 1000
+    return result if result > 4 else 1000
 
 
 def final_objective_function(solution, kappa, world) -> float:
@@ -216,13 +216,14 @@ def final_objective_function(solution, kappa, world) -> float:
     return income_objective_function(solution, kappa, world) / (time_objective_function(solution, kappa, world))
 
 
-def half_legality_test(child, max_ones):
+def half_legality_test(child_og, max_ones):
     """
     Function prevents earning more than 350/week and simplifies calculations for large populations
-    :param child: child
+    :param child_og: child
     :param max_ones: maximum number of ones (depends on input data)
     :return:
     """
+    child = deepcopy(child_og)
     ones_ptr = []
     for i in range(len(child)):
         if child[i] == 1:
@@ -272,12 +273,13 @@ def crossover(par_1, par_2, current_iter, ptr_list, crossover_barrier, max_ones)
         return child_1, child_2
 
 
-def mutation(parent, max_ones):
+def mutation(par, max_ones):
     """
-    :param parent: Parent
+    :param par: Parent
     :param max_ones: maximum number of ones (depends on input data)
     :return: Child
     """
+    parent = deepcopy(par)
     number_of_cancer_cells = np.random.randint(low=1, high=3)
     child = deepcopy(parent)
     ones_ptr = []
