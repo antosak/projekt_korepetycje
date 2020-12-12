@@ -235,8 +235,8 @@ def half_legality_test(child, max_ones):
 
 def crossover(par_1, par_2, current_iter, ptr_list, crossover_barrier, max_ones):
     """
-    :param parent_1: Parent No.1
-    :param parent_2: Parent No.2
+    :param par_1: Parent No.1
+    :param par_2: Parent No.2
     :param current_iter: Current iteration number
     :param ptr_list: List of pointers to week days
     :param crossover_barrier: number that says up to which iteration first type of crossover is more likely to happen
