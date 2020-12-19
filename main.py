@@ -1,12 +1,14 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-import uno
-import numpy as np
 from copy import deepcopy
 
-number_of_iterations = 20000
-client_list = uno.create_brave_new_world('Tutoring500nonlinear.xlsx')
+import numpy as np
+
+import uno
+
+number_of_iterations = 1000
+client_list = uno.create_brave_new_world('Examples/Tutoring500nonlinear.xlsx')
 population_size = min(2 * len(client_list), 50)
 crossover_barrier = number_of_iterations // 10
 day_ptr_list = [0]
@@ -24,13 +26,14 @@ for i in range(len(client_list)):
     elif client_list[i].day == 'sunday' and client_list[i - 1].day == 'saturday':
         day_ptr_list.append(i)
 
+
 current_population = []
 kappa_population = []
 evaluations = []
 test_counter = 1
 max_ones = min(18, len(client_list))
 while len(current_population) < population_size:
-    population_member = uno.definitly_not_a_random_member(max_ones, client_list)
+    population_member = uno.definitely_not_a_random_member(max_ones, client_list)
     kappa = uno.kappa_maker(client_list, population_member)
     if uno.legal_child(client_list, population_member, kappa):
         current_population.append(population_member)
@@ -46,7 +49,6 @@ print('initial min: ', min(evaluations), '\n')
 
 probability = 0.8
 for curr_iter in range(number_of_iterations):
-    income_list1 = []
     rand = np.random.random_sample()
     if rand > probability/(curr_iter+1):  # chance for mutation increases over time
         parent = deepcopy(current_population[np.random.randint(low=0, high=len(current_population))])
@@ -85,16 +87,6 @@ for curr_iter in range(number_of_iterations):
             current_population[minimum_ptr] = child_2
             kappa_population[minimum_ptr] = c2_kappa
             evaluations[minimum_ptr] = c2_eval
-    """
-    for member in current_population:
-        income = 0
-        for i in range(0, len(member)):
-            if member[i] == 1:
-                income += client_list[i].price
-        income_list1.append(income)
-    print(income_list1)
-    """
-
 
 print('final index: ', evaluations.index(max(evaluations)))
 print('sum ones:', np.sum(current_population[evaluations.index(max(evaluations))], axis=0))

@@ -1,12 +1,14 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-import numpy as np
-from math import sqrt
-import pandas as pd
 from copy import deepcopy
+from math import sqrt
+
+import numpy as np
+import pandas as pd
+
 # constants
-default_path = 'Tutoring.xlsx'
+default_path = 'Examples/Tutoring.xlsx'
 fuel_consumption = 8  # l/100km``
 average_speed = 50  # km/h
 fuel_cost = 4.20  # PlN/l
@@ -41,6 +43,7 @@ class Client(object):
     """
     Somewhat surprisingly class Client represents a single date with a fool, not a fool itself.
     """
+
     def __init__(self, name, price, coordinates, prep_time, teaching_time, hour, day):
         self.name = name
         self.price = price
@@ -273,13 +276,12 @@ def crossover(par_1, par_2, current_iter, ptr_list, crossover_barrier, max_ones)
         return child_1, child_2
 
 
-def mutation(par, max_ones):
+def mutation(parent, max_ones):
     """
-    :param par: Parent
+    :param parent: Parent
     :param max_ones: maximum number of ones (depends on input data)
     :return: Child
     """
-    parent = deepcopy(par)
     number_of_cancer_cells = np.random.randint(low=1, high=3)
     child = deepcopy(parent)
     ones_ptr = []
@@ -299,7 +301,7 @@ def mutation(par, max_ones):
     return child
 
 
-def definitly_not_a_random_member(max_ones, client_list):
+def definitely_not_a_random_member(max_ones, client_list):
     """
     Generates a random member-vector that will more likely pass legality test because we can not earn more than 350/week
     :param max_ones: maximum number of ones
