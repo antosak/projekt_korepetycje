@@ -1,17 +1,19 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-# This file contains the main algorithm.
+# This file is being used for collecting data from the main algorithm.
+# Prints main parameters of the result for every generation and saves that in an Excel file.
 
 from copy import deepcopy
 
 import numpy as np
+import pandas as pd
 
 import uno
 
-number_of_iterations = 10000
-client_list = uno.create_brave_new_world('Examples/Tutoring500nonlinear.xlsx')
-population_size = min(2 * len(client_list), 50)
+number_of_iterations = 500
+client_list = uno.create_brave_new_world('./Examples/Tutoring500nonlinear.xlsx')
+population_size = 50
 crossover_barrier = number_of_iterations // 10
 day_ptr_list = [0]
 for i in range(len(client_list)):
@@ -28,11 +30,21 @@ for i in range(len(client_list)):
     elif client_list[i].day == 'sunday' and client_list[i - 1].day == 'saturday':
         day_ptr_list.append(i)
 
+minimum_over_time = []
+maximum_over_time = []
+avg_over_time = []
+minimum_income_over_time = []
+maximum_income_over_time = []
+avg_income_over_time = []
+minimum_time = []
+maximum_time = []
+avg_time = []
 
 current_population = []
 kappa_population = []
 evaluations = []
 test_counter = 1
+
 max_ones = min(18, len(client_list))
 while len(current_population) < population_size:
     population_member = uno.definitely_not_a_random_member(max_ones, client_list)
@@ -43,16 +55,16 @@ while len(current_population) < population_size:
         evaluations.append(uno.final_objective_function(population_member, kappa, client_list))
 
     test_counter += 1
-# TODO do usunięcia po testach
+
 print(test_counter, '\n')
 
 print('initial score: ', max(evaluations))
 print('initial min: ', min(evaluations), '\n')
-#############################
+
 probability = 0.8
 for curr_iter in range(number_of_iterations):
     rand = np.random.random_sample()
-    if rand > probability/(curr_iter+1):  # chance for mutation increases over time
+    if rand > probability / (curr_iter + 1):  # chance for mutation increases over time
         parent = deepcopy(current_population[np.random.randint(low=0, high=len(current_population))])
         child_1 = uno.mutation(parent, max_ones)
         child_2 = None
@@ -90,6 +102,36 @@ for curr_iter in range(number_of_iterations):
             kappa_population[minimum_ptr] = c2_kappa
             evaluations[minimum_ptr] = c2_eval
 
+    income_table = []
+    minimum_income = 0
+    maximum_income = 0
+    minimum_value, minimum_ptr = min(evaluations), evaluations.index(min(evaluations))
+    maximum_value, maximum_ptr = max(evaluations), evaluations.index(max(evaluations))
+    for member in current_population:
+        income = 0
+        for i in range(0, len(member)):
+            if member[i] == 1:
+                income += client_list[i].price
+        income_table.append(income)
+
+    for i in range(0, len(current_population[minimum_ptr])):
+        if current_population[minimum_ptr][i] == 1:
+            minimum_income += client_list[i].price
+
+    for i in range(0, len(current_population[maximum_ptr])):
+        if current_population[maximum_ptr][i] == 1:
+            maximum_income += client_list[i].price
+
+    minimum_over_time.append(minimum_value)
+    maximum_over_time.append(maximum_value)
+    avg_over_time.append(sum(evaluations) / len(evaluations))
+    minimum_income_over_time.append(minimum_income)
+    maximum_income_over_time.append(maximum_income)
+    avg_income_over_time.append(sum(income_table) / len(current_population))
+    minimum_time.append(minimum_income / minimum_value)
+    maximum_time.append(maximum_income / maximum_value)
+    avg_time.append((sum(income_table) / len(current_population)) / (sum(evaluations) / len(evaluations)))
+
 ones_ptr = []
 for i in range(len(current_population[evaluations.index(max(evaluations))])):
     if current_population[evaluations.index(max(evaluations))][i] == 1:
@@ -102,3 +144,34 @@ print('Total number of clients:', np.sum(current_population[evaluations.index(ma
 print("Your clients' numbers: ", ones_ptr)
 print('Objective function value: ', max(evaluations))
 print("Your total income for this week: ", income)
+
+DATA = {
+    'Minimum Fun': minimum_over_time,
+    'Maximum Fun': maximum_over_time,
+    'Average Fun': avg_over_time,
+    'Minimum income': minimum_income_over_time,
+    'Maximum income': maximum_income_over_time,
+    'Average income': avg_income_over_time,
+    'Minimum time': minimum_time,
+    'Maximum time': maximum_time,
+    'Average time': avg_time,
+
+}
+data_frame = pd.DataFrame(DATA, columns=['Minimum Fun', 'Maximum Fun', 'Average Fun', 'Minimum income',
+                                         'Maximum income', 'Average income', 'Minimum time', 'Maximum time',
+                                         'Average time'])
+
+if number_of_iterations == 500:
+    data_frame.to_excel('./Dat/RawData_oneiter_500.xlsx', header=True)
+elif number_of_iterations == 1000:
+    data_frame.to_excel('./Dat/RawData_oneiter_1000.xlsx', header=True)
+elif number_of_iterations == 2000:
+    data_frame.to_excel('./Dat/RawData_oneiter_2000.xlsx', header=True)
+elif number_of_iterations == 4000:
+    data_frame.to_excel('./Dat/RawData_oneiter_4000.xlsx', header=True)
+elif number_of_iterations == 6000:
+    data_frame.to_excel('./Dat/RawData_oneiter_6000.xlsx', header=True)
+elif number_of_iterations == 8000:
+    data_frame.to_excel('./Dat/RawData_oneiter_8000.xlsx', header=True)
+elif number_of_iterations == 10000:
+    data_frame.to_excel('./Dat/RawData_oneiter_10000.xlsx', header=True)

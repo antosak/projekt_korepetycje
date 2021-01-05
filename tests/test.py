@@ -4,6 +4,7 @@
 # This file is being used for collecting data from the main algorithm.
 # Basically iterates over algorithm "repeat ="(1000) times for "iter_example =..." - number of generations.
 # Prints it's state every 10 iterations and saves data to a file after all 1000 iterations.
+# WARNING! Running whole program on just one thread can take approximately 210 hours.
 
 from copy import deepcopy
 from time import time
@@ -18,7 +19,7 @@ iter_example = [500, 1000, 2000, 4000, 6000, 8000, 10000]
 begin = time()
 for k in iter_example:
     number_of_iterations = k
-    client_list = uno.create_brave_new_world('Examples/Tutoring500nonlinear.xlsx')
+    client_list = uno.create_brave_new_world('./Examples/Tutoring500nonlinear.xlsx')
     population_size = min(2 * len(client_list), 50)
     crossover_barrier = number_of_iterations // 10
     day_ptr_list = [0]
@@ -46,6 +47,9 @@ for k in iter_example:
     maximum_income_over_time = []
     minimum_income_over_time = []
     avg_income_over_time = []
+    maximum_time = []
+    avg_time = []
+
     calculating_time_per_iteration = []
 
     for g in range(repeat):
@@ -124,6 +128,8 @@ for k in iter_example:
         maximum_income_over_time.append(max(income_table))
         avg_income_over_time.append(sum(income_table) / len(income_table))
         calculating_time_per_iteration.append(time() - start)
+        maximum_time.append(max(income_table) / max(evaluations))
+        avg_time.append((sum(income_table) / len(income_table)) / (sum(evaluations) / len(evaluations)))
         if g % 0.01 == 0:
             print(g)
 
@@ -141,23 +147,25 @@ for k in iter_example:
         'Minimum income': minimum_income_over_time,
         'Maximum income': maximum_income_over_time,
         'Average income': avg_income_over_time,
-        'Iteration time': calculating_time_per_iteration
+        'Iteration time': calculating_time_per_iteration,
+        'Suboptimal teaching time': maximum_time,
+        'Average teaching time': avg_time
     }
     data_frame = pd.DataFrame(DATA, columns=['Initial minimum', 'Initial maximum', 'Initial average', 'Final minimum',
                                              'Final maximum', 'Final average', 'Minimum income', 'Maximum income',
                                              'Average income', 'Iteration time'])
 
     if number_of_iterations == 1000:
-        data_frame.to_excel('RawData_iter_1000.xlsx', header=True)
+        data_frame.to_excel('./Dat/RawData_iter_1000.xlsx', header=True)
     elif number_of_iterations == 2000:
-        data_frame.to_excel('RawData_iter_2000.xlsx', header=True)
+        data_frame.to_excel('./Dat/RawData_iter_2000.xlsx', header=True)
     elif number_of_iterations == 4000:
-        data_frame.to_excel('RawData_iter_4000.xlsx', header=True)
+        data_frame.to_excel('./Dat/RawData_iter_4000.xlsx', header=True)
     elif number_of_iterations == 6000:
-        data_frame.to_excel('RawData_iter_6000.xlsx', header=True)
+        data_frame.to_excel('./Dat/RawData_iter_6000.xlsx', header=True)
     elif number_of_iterations == 8000:
-        data_frame.to_excel('RawData_iter_8000.xlsx', header=True)
+        data_frame.to_excel('./Dat/RawData_iter_8000.xlsx', header=True)
     elif number_of_iterations == 10000:
-        data_frame.to_excel('RawData_iter_10000.xlsx', header=True)
+        data_frame.to_excel('./Dat/RawData_iter_10000.xlsx', header=True)
     else:
-        data_frame.to_excel('RawData_iter_500.xlsx', header=True)
+        data_frame.to_excel('./Dat/RawData_iter_500.xlsx', header=True)
