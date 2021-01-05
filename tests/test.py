@@ -19,7 +19,7 @@ iter_example = [500, 1000, 2000, 4000, 6000, 8000, 10000]
 begin = time()
 for k in iter_example:
     number_of_iterations = k
-    client_list = uno.create_brave_new_world('./Examples/Tutoring500nonlinear.xlsx')
+    client_list = uno.create_brave_new_world('.\\Examples\\Tutoring500nonlinear.xlsx')
     population_size = min(2 * len(client_list), 50)
     crossover_barrier = number_of_iterations // 10
     day_ptr_list = [0]

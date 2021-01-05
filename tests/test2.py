@@ -12,7 +12,7 @@ import pandas as pd
 import uno
 
 number_of_iterations = 500
-client_list = uno.create_brave_new_world('./Examples/Tutoring500nonlinear.xlsx')
+client_list = uno.create_brave_new_world('.\\Examples\\Tutoring500nonlinear.xlsx')
 population_size = 50
 crossover_barrier = number_of_iterations // 10
 day_ptr_list = [0]

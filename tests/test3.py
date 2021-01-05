@@ -19,7 +19,7 @@ popsize = [25, 50, 75, 100]
 begin = time()
 for k in popsize:
     number_of_iterations = 4000
-    client_list = uno.create_brave_new_world('./Examples/Tutoring500nonlinear.xlsx')
+    client_list = uno.create_brave_new_world('.\\Examples\\Tutoring500nonlinear.xlsx')
     population_size = k
     crossover_barrier = number_of_iterations // 10
     day_ptr_list = [0]
