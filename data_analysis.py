@@ -37,7 +37,7 @@ def first_test():
     axs[5, 0].set_ylabel("8000")
     axs[6, 0].hist(df10000['Maximum income'], bins=20, rwidth=szerokosc_paskow)
     axs[6, 0].set_ylabel("10000")
-    axs[6, 0].set_xlabel("Zysk [PLN]", fontsize=12)
+    axs[6, 0].set_xlabel("Przychód [PLN]", fontsize=12)
 
     axs[0, 1].hist(df500['Suboptimal teaching time'], bins=20, rwidth=szerokosc_paskow)
     axs[1, 1].hist(df1000['Suboptimal teaching time'], bins=20, rwidth=szerokosc_paskow)
@@ -129,22 +129,34 @@ def third_test():
 def controversial_test():
     df4000 = pd.read_excel("Dat/RawData_iter_4000.xlsx", index_col=0)
 
-    fig = plt.figure(figsize=(9.6, 7.2))
-    ax = fig.add_subplot(111)
-    ax.set_title("Zależność końcowego najlepszego rozwiązania od początkowego najlepszego rozwiązania", fontweight='bold')
-    ax.scatter(df4000["Initial maximum"], df4000["Final maximum"], s=5)
-    plt.grid()
+    fig, axs = plt.subplots(2, 1, figsize=(9.6, 10.6))
+    axs[0].set_title("Zależność końcowego najlepszego rozwiązania od początkowego najlepszego rozwiązania", fontweight='bold')
+    axs[0].scatter(df4000["Initial maximum"], df4000["Final maximum"], s=5)
+    axs[0].grid()
     z = np.polyfit(df4000["Initial maximum"], df4000["Final maximum"], 1)
     p = np.poly1d(z)
-    ax.plot(df4000["Initial maximum"], p(df4000["Initial maximum"]), "r")
+    axs[0].plot(df4000["Initial maximum"], p(df4000["Initial maximum"]), "r")
     txt = "Linia trendu: y=%.2fx+%.2f" % (z[0], z[1])
-    ax.annotate(txt, xy=(29, 39.3), xytext=(27, 44.5), fontsize=14,
-                arrowprops=dict(facecolor='black', shrink=0.05))
-    ax.set_xlabel("Początkowe maksimum [PLN/h]")
-    ax.set_ylabel("Końcowy wynik [PLN/h]")
+    axs[0].annotate(txt, xy=(29, 39.3), xytext=(27, 44.5), fontsize=14,
+                    arrowprops=dict(facecolor='black', shrink=0.05))
+    axs[0].set_xlabel("Początkowe najlepsze rozwiązanie [PLN/h]")
+    axs[0].set_ylabel("Końcowe najlepsze rozwiązanie [PLN/h]")
+
+    axs[1].set_title("Zależność końcowego średniego rozwiązania od początkowego średniego rozwiązania", fontweight='bold')
+    axs[1].scatter(df4000["Initial average"], df4000["Final average"], s=5)
+    axs[1].grid()
+    z = np.polyfit(df4000["Initial average"], df4000["Final average"], 1)
+    p = np.poly1d(z)
+    axs[1].plot(df4000["Initial average"], p(df4000["Initial average"]), "r")
+    txt = "y=%.2fx+%.2f" % (z[0], z[1])
+    axs[1].annotate(txt, xy=(16, 37.3), xytext=(15, 42.5), fontsize=14,
+                    arrowprops=dict(facecolor='black', shrink=0.05))
+    axs[1].set_xlabel("Początkowe średnie rozwiązanie [PLN/h]")
+    axs[1].set_ylabel("Końcowe średnie rozwiązanie [PLN/h]")
+
     plt.savefig("Plots & Charts/yahoooy.png")
     plt.show()
     return fig
 
 
-# a = controversial_test()
+a = controversial_test()
