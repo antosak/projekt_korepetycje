@@ -37,22 +37,19 @@ for k in barriers:
         elif client_list[i].day == 'sunday' and client_list[i - 1].day == 'saturday':
             day_ptr_list.append(i)
 
-    repeat = 1
+    repeat = 1000
+    min_final_average = []
+    max_final_average = []
+    avg_final_average = []
+    min_repeats = []
+    max_repeats = []
+    avg_repeats = []
     initial_minimum_over_time = []
-    initial_maximum_over_time = []
-    initial_avg_over_time = []
-    final_minimum_over_time = []
-    final_maximum_over_time = []
-    final_avg_over_time = []
-    maximum_income_over_time = []
-    minimum_income_over_time = []
-    avg_income_over_time = []
-    maximum_time = []
-    avg_time = []
-
-    calculating_time_per_iteration = []
 
     for g in range(repeat):
+        min_per_iter = []
+        max_per_iter = []
+        avg_per_iter = []
         start = time()
         current_population = []
         kappa_population = []
@@ -66,9 +63,9 @@ for k in barriers:
                 kappa_population.append(kappa)
                 evaluations.append(uno.final_objective_function(population_member, kappa, client_list))
         ######################
-        initial_minimum_over_time.append(min(evaluations))
-        initial_maximum_over_time.append(max(evaluations))
-        initial_avg_over_time.append(sum(evaluations) / len(evaluations))
+        min_per_iter.append(min(evaluations))
+        max_per_iter.append(max(evaluations))
+        avg_per_iter.append(sum(evaluations) / len(evaluations))
         ######################
         iter_barrier1, iter_barrier2 = k[0], k[1]
 
@@ -120,49 +117,47 @@ for k in barriers:
                     current_population[minimum_ptr] = child_2
                     kappa_population[minimum_ptr] = c2_kappa
                     evaluations[minimum_ptr] = c2_eval
+            ######################
+            min_per_iter.append(min(evaluations))
+            max_per_iter.append(max(evaluations))
+            avg_per_iter.append(sum(evaluations) / len(evaluations))
+            ######################
         ######################
-        final_minimum_over_time.append(min(evaluations))
-        final_maximum_over_time.append(max(evaluations))
-        final_avg_over_time.append(sum(evaluations) / len(evaluations))
+        min_repeats.append(min_per_iter)
+        max_repeats.append(max_per_iter)
+        avg_repeats.append(avg_per_iter)
         ######################
-        income_table = []
-        for member in current_population:
-            income = 0
-            for i in range(0, len(member)):
-                if member[i] == 1:
-                    income += client_list[i].price
-            income_table.append(income)
-        minimum_income_over_time.append(min(income_table))
-        maximum_income_over_time.append(max(income_table))
-        avg_income_over_time.append(sum(income_table) / len(income_table))
-        calculating_time_per_iteration.append(time() - start)
-        maximum_time.append(max(income_table) / max(evaluations))
-        avg_time.append((sum(income_table) / len(income_table)) / (sum(evaluations) / len(evaluations)))
+
         if repeat % 0.01 == 0:
             print(repeat)
+
+    min_temp = []
+    max_temp = []
+    avg_temp = []
+    for i in range(number_of_iterations+1):
+        for elem in min_repeats:
+            min_temp.append(elem[i])
+        for elem in max_repeats:
+            max_temp.append(elem[i])
+        for elem in avg_repeats:
+            avg_temp.append(elem[i])
+        min_final_average.append(sum(min_temp) / len(min_temp))
+        max_final_average.append(sum(max_temp) / len(max_temp))
+        avg_final_average.append(sum(avg_temp) / len(avg_temp))
+        min_temp = []
+        max_temp = []
+        avg_temp = []
 
     total_time = time() - begin
     print(total_time)
     print("Finished")
 
     DATA = {
-        'Initial minimum': initial_minimum_over_time,
-        'Initial maximum': initial_maximum_over_time,
-        'Initial average': initial_avg_over_time,
-        'Final minimum': final_minimum_over_time,
-        'Final maximum': final_maximum_over_time,
-        'Final average': final_avg_over_time,
-        'Minimum income': minimum_income_over_time,
-        'Maximum income': maximum_income_over_time,
-        'Average income': avg_income_over_time,
-        'Iteration time': calculating_time_per_iteration,
-        'Suboptimal teaching time': maximum_time,
-        'Average teaching time': avg_time
+        'Minimum Fun': min_final_average,
+        'Maximum Fun': max_final_average,
+        'Average Fun': avg_final_average,
     }
-    data_frame = pd.DataFrame(DATA, columns=['Initial minimum', 'Initial maximum', 'Initial average', 'Final minimum',
-                                             'Final maximum', 'Final average', 'Minimum income', 'Maximum income',
-                                             'Average income', 'Iteration time', 'Suboptimal teaching time',
-                                             'Average teaching time'])
+    data_frame = pd.DataFrame(DATA, columns=['Minimum Fun', 'Maximum Fun', 'Average Fun'])
 
     if k == [400, 800]:
         data_frame.to_excel('Dat/RawData_prob1020.xlsx', header=True)
