@@ -12,7 +12,7 @@ import pandas as pd
 import uno
 
 number_of_iterations = 500
-client_list = uno.create_brave_new_world('.\\Examples\\Tutoring500nonlinear.xlsx')
+client_list = uno.create_brave_new_world('Examples/Tutoring500nonlinear.xlsx')
 population_size = 50
 crossover_barrier = number_of_iterations // 10
 day_ptr_list = [0]
@@ -162,16 +162,16 @@ data_frame = pd.DataFrame(DATA, columns=['Minimum Fun', 'Maximum Fun', 'Average 
                                          'Average time'])
 
 if number_of_iterations == 500:
-    data_frame.to_excel('./Dat/RawData_oneiter_500.xlsx', header=True)
+    data_frame.to_excel('Dat/RawData_oneiter_500.xlsx', header=True)
 elif number_of_iterations == 1000:
-    data_frame.to_excel('./Dat/RawData_oneiter_1000.xlsx', header=True)
+    data_frame.to_excel('Dat/RawData_oneiter_1000.xlsx', header=True)
 elif number_of_iterations == 2000:
-    data_frame.to_excel('./Dat/RawData_oneiter_2000.xlsx', header=True)
+    data_frame.to_excel('Dat/RawData_oneiter_2000.xlsx', header=True)
 elif number_of_iterations == 4000:
-    data_frame.to_excel('./Dat/RawData_oneiter_4000.xlsx', header=True)
+    data_frame.to_excel('Dat/RawData_oneiter_4000.xlsx', header=True)
 elif number_of_iterations == 6000:
-    data_frame.to_excel('./Dat/RawData_oneiter_6000.xlsx', header=True)
+    data_frame.to_excel('Dat/RawData_oneiter_6000.xlsx', header=True)
 elif number_of_iterations == 8000:
-    data_frame.to_excel('./Dat/RawData_oneiter_8000.xlsx', header=True)
+    data_frame.to_excel('Dat/RawData_oneiter_8000.xlsx', header=True)
 elif number_of_iterations == 10000:
-    data_frame.to_excel('./Dat/RawData_oneiter_10000.xlsx', header=True)
+    data_frame.to_excel('Dat/RawData_oneiter_10000.xlsx', header=True)

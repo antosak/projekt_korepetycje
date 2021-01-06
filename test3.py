@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 # This file is being used for collecting data from the main algorithm.
-# Basically iterates over algorithm "repeat ="(1000) times for "iter_example =..." - number of generations.
+# Basically iterates over algorithm "repeat ="(1000) for 4000 generations and different population sizes.
 # Prints it's state every 10 iterations and saves data to a file after all 1000 iterations.
 # WARNING! Running whole program on just one thread can take approximately 210 hours.
 
@@ -14,13 +14,13 @@ import pandas as pd
 
 import uno
 
-iter_example = [500, 1000, 2000, 4000, 6000, 8000, 10000]
+popsize = [25, 50, 75, 100]
 
 begin = time()
-for k in iter_example:
-    number_of_iterations = k
-    client_list = uno.create_brave_new_world('.\\Examples\\Tutoring500nonlinear.xlsx')
-    population_size = min(2 * len(client_list), 50)
+for k in popsize:
+    number_of_iterations = 4000
+    client_list = uno.create_brave_new_world('Examples/Tutoring500nonlinear.xlsx')
+    population_size = k
     crossover_barrier = number_of_iterations // 10
     day_ptr_list = [0]
     for i in range(len(client_list)):
@@ -37,7 +37,7 @@ for k in iter_example:
         elif client_list[i].day == 'sunday' and client_list[i - 1].day == 'saturday':
             day_ptr_list.append(i)
 
-    repeat = 1000
+    repeat = 1
     initial_minimum_over_time = []
     initial_maximum_over_time = []
     initial_avg_over_time = []
@@ -155,17 +155,11 @@ for k in iter_example:
                                              'Final maximum', 'Final average', 'Minimum income', 'Maximum income',
                                              'Average income', 'Iteration time'])
 
-    if number_of_iterations == 1000:
-        data_frame.to_excel('./Dat/RawData_iter_1000.xlsx', header=True)
-    elif number_of_iterations == 2000:
-        data_frame.to_excel('./Dat/RawData_iter_2000.xlsx', header=True)
-    elif number_of_iterations == 4000:
-        data_frame.to_excel('./Dat/RawData_iter_4000.xlsx', header=True)
-    elif number_of_iterations == 6000:
-        data_frame.to_excel('./Dat/RawData_iter_6000.xlsx', header=True)
-    elif number_of_iterations == 8000:
-        data_frame.to_excel('./Dat/RawData_iter_8000.xlsx', header=True)
-    elif number_of_iterations == 10000:
-        data_frame.to_excel('./Dat/RawData_iter_10000.xlsx', header=True)
-    else:
-        data_frame.to_excel('./Dat/RawData_iter_500.xlsx', header=True)
+    if population_size == 25:
+        data_frame.to_excel('Dat/RawData_popsize25.xlsx', header=True)
+    elif population_size == 50:
+        data_frame.to_excel('Dat/RawData_popsize50.xlsx', header=True)
+    elif population_size == 75:
+        data_frame.to_excel('Dat/RawData_popsize75.xlsx', header=True)
+    elif population_size == 100:
+        data_frame.to_excel('Dat/RawData_popsize100.xlsx', header=True)
