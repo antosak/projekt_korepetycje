@@ -130,7 +130,7 @@ for k in popsize:
         calculating_time_per_iteration.append(time() - start)
         maximum_time.append(max(income_table) / max(evaluations))
         avg_time.append((sum(income_table) / len(income_table)) / (sum(evaluations) / len(evaluations)))
-        if repeat % 0.01 == 0:
+        if g % 0.01 == 0:
             print(repeat)
 
     total_time = time() - begin

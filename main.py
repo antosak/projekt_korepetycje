@@ -9,7 +9,8 @@ import numpy as np
 
 import uno
 
-number_of_iterations = 10000
+print('Preparing data ...')
+number_of_iterations = 4000
 client_list = uno.create_brave_new_world('Examples/Tutoring500nonlinear.xlsx')
 population_size = min(2 * len(client_list), 50)
 crossover_barrier = number_of_iterations // 10
@@ -32,7 +33,7 @@ for i in range(len(client_list)):
 current_population = []
 kappa_population = []
 evaluations = []
-test_counter = 1
+
 max_ones = min(18, len(client_list))
 while len(current_population) < population_size:
     population_member = uno.definitely_not_a_random_member(max_ones, client_list)
@@ -42,13 +43,7 @@ while len(current_population) < population_size:
         kappa_population.append(kappa)
         evaluations.append(uno.final_objective_function(population_member, kappa, client_list))
 
-    test_counter += 1
-# TODO do usunięcia po testach
-print(test_counter, '\n')
-
-print('initial score: ', max(evaluations))
-print('initial min: ', min(evaluations), '\n')
-#############################
+print('Calculating ...\n ETC. ', 0.024 * number_of_iterations, '[s]\n')
 probability = 0.8
 for curr_iter in range(number_of_iterations):
     rand = np.random.random_sample()
@@ -99,6 +94,6 @@ income = 0
 for elem in ones_ptr:
     income += client_list[elem].price
 print('Total number of clients:', np.sum(current_population[evaluations.index(max(evaluations))], axis=0))
-print("Your clients' numbers: ", ones_ptr)
+print("Customer numbers: ", ones_ptr)
 print('Objective function value: ', max(evaluations))
 print("Your total income for this week: ", income)
