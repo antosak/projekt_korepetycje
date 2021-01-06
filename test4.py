@@ -14,13 +14,13 @@ import pandas as pd
 
 import uno
 
-popsize = [25, 50, 75, 100]
-
 begin = time()
-for k in popsize:
+barriers = [[400, 800], [800, 1600], [1200, 2400]]
+
+for k in barriers:
     number_of_iterations = 4000
     client_list = uno.create_brave_new_world('Examples/Tutoring500nonlinear.xlsx')
-    population_size = k
+    population_size = 50
     crossover_barrier = number_of_iterations // 10
     day_ptr_list = [0]
     for i in range(len(client_list)):
@@ -70,10 +70,18 @@ for k in popsize:
         initial_maximum_over_time.append(max(evaluations))
         initial_avg_over_time.append(sum(evaluations) / len(evaluations))
         ######################
-        probability = 0.8
+        iter_barrier1, iter_barrier2 = k[0], k[1]
+
         for curr_iter in range(number_of_iterations):
             rand = np.random.random_sample()
-            if rand > probability / (curr_iter + 1):  # chance for mutation increases over time
+            if curr_iter <= iter_barrier1:
+                probability = 0.8
+            elif curr_iter <= iter_barrier2:
+                probability = 0.4
+            else:
+                probability = 0
+
+            if rand > probability:  # chance for mutation increases over time
                 parent = deepcopy(current_population[np.random.randint(low=0, high=len(current_population))])
                 child_1 = uno.mutation(parent, max_ones)
                 child_2 = None
@@ -156,11 +164,9 @@ for k in popsize:
                                              'Average income', 'Iteration time', 'Suboptimal teaching time',
                                              'Average teaching time'])
 
-    if population_size == 25:
-        data_frame.to_excel('Dat/RawData_popsize25.xlsx', header=True)
-    elif population_size == 50:
-        data_frame.to_excel('Dat/RawData_popsize50.xlsx', header=True)
-    elif population_size == 75:
-        data_frame.to_excel('Dat/RawData_popsize75.xlsx', header=True)
-    elif population_size == 100:
-        data_frame.to_excel('Dat/RawData_popsize100.xlsx', header=True)
+    if k == [400, 800]:
+        data_frame.to_excel('Dat/RawData_prob1020.xlsx', header=True)
+    elif k == [800, 1600]:
+        data_frame.to_excel('Dat/RawData_prob2040.xlsx', header=True)
+    elif k == [1200, 2400]:
+        data_frame.to_excel('Dat/RawData_prob3060.xlsx', header=True)
