@@ -3,6 +3,7 @@
 
 import matplotlib.pyplot as plt
 import pandas as pd
+import numpy as np
 
 # Width of histogram bars (number from  0 to 1)
 szerokosc_paskow = 1
@@ -124,3 +125,26 @@ def third_test():
 
 # DO NOT RUN until data arrives
 # a = third_test()
+
+def controversial_test():
+    df4000 = pd.read_excel("Dat/RawData_iter_4000.xlsx", index_col=0)
+
+    fig = plt.figure(figsize=(9.6, 7.2))
+    ax = fig.add_subplot(111)
+    ax.set_title("Zależność końcowego najlepszego rozwiązania od początkowego najlepszego rozwiązania", fontweight='bold')
+    ax.scatter(df4000["Initial maximum"], df4000["Final maximum"], s=5)
+    plt.grid()
+    z = np.polyfit(df4000["Initial maximum"], df4000["Final maximum"], 1)
+    p = np.poly1d(z)
+    ax.plot(df4000["Initial maximum"], p(df4000["Initial maximum"]), "r")
+    txt = "Linia trendu: y=%.2fx+%.2f" % (z[0], z[1])
+    ax.annotate(txt, xy=(29, 39.3), xytext=(27, 44.5), fontsize=14,
+                arrowprops=dict(facecolor='black', shrink=0.05))
+    ax.set_xlabel("Początkowe maksimum [PLN/h]")
+    ax.set_ylabel("Końcowy wynik [PLN/h]")
+    plt.savefig("Plots & Charts/yahoooy.png")
+    plt.show()
+    return fig
+
+
+# a = controversial_test()
