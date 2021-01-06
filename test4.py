@@ -37,7 +37,7 @@ for k in barriers:
         elif client_list[i].day == 'sunday' and client_list[i - 1].day == 'saturday':
             day_ptr_list.append(i)
 
-    repeat = 1000
+    repeat = 12
     min_final_average = []
     max_final_average = []
     avg_final_average = []
@@ -128,7 +128,7 @@ for k in barriers:
         avg_repeats.append(avg_per_iter)
         ######################
 
-        if repeat % 0.01 == 0:
+        if g % 0.01 == 0:
             print(repeat)
 
     min_temp = []
