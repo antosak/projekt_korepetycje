@@ -126,25 +126,38 @@ def third_test():
 
 # does not work
 def third_test_vel2():
-    df25 = pd.read_excel("Dat/RawData_popsize25.xlsx", index_col=0)
-    df50 = pd.read_excel("Dat/RawData_popsize50.xlsx", index_col=0)
-    df75 = pd.read_excel("Dat/RawData_popsize75.xlsx", index_col=0)
-    df100 = pd.read_excel("Dat/RawData_popsize100.xlsx", index_col=0)
+    df25 = pd.read_excel("Dat/RawData_pop25.xlsx", index_col=0)
+    df50 = pd.read_excel("Dat/RawData_pop50.xlsx", index_col=0)
+    df75 = pd.read_excel("Dat/RawData_pop75.xlsx", index_col=0)
+    df100 = pd.read_excel("Dat/RawData_pop_100.xlsx", index_col=0)
 
-    fig, axs = plt.subplots(4, 1, figsize=(10, 6), sharey='row')
-    fig.suptitle("Zachowanie się granicznych i średniego rozwiązania", fontsize=16)
+    fig, axs = plt.subplots(4, 1, figsize=(10, 12), sharey='row')
+    fig.suptitle("Zachowanie się granicznych i średniego rozwiązania dla różnych populacji", fontsize=16)
+    fig.text(0.02, 0.5, "Funkcja celu [PLN/h]", va='center', rotation='vertical', fontsize=12)
 
-    axs[0].plot(df25["Minimum Fun"], color="red", label="Minimum")
+    axs[0].plot(df25.iloc[5:]["Minimum Fun"], color="red", label="Minimum")
     axs[0].plot(df25["Average Fun"], color="blue", label="Średnia")
     axs[0].plot(df25["Maximum Fun"], color='green', label="Maksimum")
-    axs[0].set_ylabel("Funkcja celu [PLN/h]", fontsize=12)
-    axs[0].set_xlabel("Iteracja", fontsize=12)
-    axs[1].plot(df50["Minimum Fun"], color="red", label="Minimum")
+    axs[0].set_ylabel("25")
+
+    axs[1].plot(df50.iloc[10:]["Minimum Fun"], color="red", label="Minimum")
     axs[1].plot(df50["Average Fun"], color="blue", label="Średnia")
     axs[1].plot(df50["Maximum Fun"], color='green', label="Maksimum")
-    axs[1].set_xlabel("Iteracja", fontsize=12)
+    axs[1].set_ylabel("50")
+
+    axs[2].plot(df75.iloc[25:]["Minimum Fun"], color="red", label="Minimum")
+    axs[2].plot(df75["Average Fun"], color="blue", label="Średnia")
+    axs[2].plot(df75["Maximum Fun"], color='green', label="Maksimum")
+    axs[2].set_ylabel("75")
+
+    axs[3].plot(df100.iloc[28:]["Minimum Fun"], color="red", label="Minimum")
+    axs[3].plot(df100["Average Fun"], color="blue", label="Średnia")
+    axs[3].plot(df100["Maximum Fun"], color='green', label="Maksimum")
+    axs[3].set_xlabel("Iteracja", fontsize=12)
+    axs[3].set_ylabel("100")
+
     plt.legend(fontsize=16)
-    plt.savefig("Plots & Charts/max average min.png")
+    plt.savefig("Plots & Charts/populacja jedna iteracja.png")
     plt.show()
     return fig
 
@@ -178,6 +191,39 @@ def fourth_test():
     plt.legend(fontsize=16)
 
     plt.savefig("Plots & Charts/prawdopodobieństwa.png")
+    plt.show()
+
+    return fig
+
+
+def fourth_test_vel2():
+    data1020 = pd.read_excel("Dat/RawData_prob1020.xlsx", index_col=0)
+    data2040 = pd.read_excel("Dat/RawData_prob2040.xlsx", index_col=0)
+    data3060 = pd.read_excel("Dat/RawData_prob3060.xlsx", index_col=0)
+
+    fig, axs = plt.subplots(3, 1, figsize=(10, 9), sharex='col')
+    fig.suptitle("Wynik algorytmu dla różnych częstotliwości występowania operatorów", fontsize=18)
+    fig.text(0.04, 0.5, 'Progi zmiany operatora krzyżowania, mutacji', va='center', rotation='vertical', fontsize=14)
+
+    axs[0].plot(data1020.iloc[500:]["Minimum Fun"], color="red", label="Minimum")
+    axs[0].plot(data1020.iloc[500:]["Average Fun"], color="blue", label="Średnia")
+    axs[0].plot(data1020.iloc[500:]["Maximum Fun"], color='green', label="Maksimum")
+    axs[0].set_ylabel("400, 800")
+    axs[0].grid()
+    axs[1].plot(data2040.iloc[500:]["Minimum Fun"], color="red", label="Minimum")
+    axs[1].plot(data2040.iloc[500:]["Average Fun"], color="blue", label="Średnia")
+    axs[1].plot(data2040.iloc[500:]["Maximum Fun"], color='green', label="Maksimum")
+    axs[1].set_ylabel("800, 1600")
+    axs[1].grid()
+    axs[2].plot(data3060.iloc[500:]["Minimum Fun"], color="red", label="Minimum")
+    axs[2].plot(data3060.iloc[500:]["Average Fun"], color="blue", label="Średnia")
+    axs[2].plot(data3060.iloc[500:]["Maximum Fun"], color='green', label="Maksimum")
+    axs[2].set_ylabel("1200, 2400")
+    axs[2].set_xlabel("Iteracja", fontsize=14)
+    axs[2].grid()
+    plt.legend(fontsize=16)
+
+    plt.savefig("Plots & Charts/prawdopodobieństwa bez pierwszych 500.png")
     plt.show()
 
     return fig
@@ -217,4 +263,5 @@ def controversial_test():
     return fig
 
 
-a = fourth_test()
+aa = fourth_test()
+a = fourth_test_vel2()
