@@ -91,9 +91,10 @@ def third_test():
     df75 = pd.read_excel("Dat/RawData_popsize75.xlsx", index_col=0)
     df100 = pd.read_excel("Dat/RawData_popsize100.xlsx", index_col=0)
 
-    fig1, axs = plt.subplots(4, 3, figsize=(8.25, 6.75), sharey="row", sharex="col")
+    fig1, axs = plt.subplots(4, 3, figsize=(9.5, 6.75), sharey="row", sharex="col")
     fig1.suptitle("Porównanie składowych i ostatecznej funkcji celu (1000 powtórzeń)", fontsize=16)
-    fig1.subplots_adjust(top=0.95, left=0.1)
+    fig1.subplots_adjust(top=0.93, left=0.1)
+    fig1.text(0.01, 0.5, 'Wielkość populacji', va='center', rotation='vertical', fontsize=14)
 
     axs[0, 0].hist(df25['Maximum income'], bins=20, rwidth=szerokosc_paskow)
     axs[0, 0].set_ylabel("25")
@@ -109,23 +110,54 @@ def third_test():
     axs[1, 1].hist(df50['Suboptimal teaching time'], bins=20, rwidth=szerokosc_paskow)
     axs[2, 1].hist(df75['Suboptimal teaching time'], bins=20, rwidth=szerokosc_paskow)
     axs[3, 1].hist(df100['Suboptimal teaching time'], bins=20, rwidth=szerokosc_paskow)
-    axs[6, 1].set_xlabel("Czas [h]", fontsize=12)
+    axs[3, 1].set_xlabel("Czas [h]", fontsize=12)
 
     axs[0, 2].hist(df25['Final maximum'], bins=20, rwidth=szerokosc_paskow)
     axs[1, 2].hist(df50['Final maximum'], bins=20, rwidth=szerokosc_paskow)
     axs[2, 2].hist(df75['Final maximum'], bins=20, rwidth=szerokosc_paskow)
     axs[3, 2].hist(df100['Final maximum'], bins=20, rwidth=szerokosc_paskow)
-    axs[6, 2].set_xlabel("Funkcja celu [PLN/h]", fontsize=12)
+    axs[3, 2].set_xlabel("Funkcja celu [PLN/h]", fontsize=12)
 
     plt.savefig("Plots & Charts/pop_size and objective functions.png")
     plt.show()
 
     return fig1
 
-
-# DO NOT RUN until data arrives
 # a = third_test()
 
+
+# Probability of crossover and mutation
+def fourth_test():
+    data1020 = pd.read_excel("Dat/RawData_prob1020.xlsx", index_col=0)
+    data2040 = pd.read_excel("Dat/RawData_prob2040.xlsx", index_col=0)
+    data3060 = pd.read_excel("Dat/RawData_prob3060.xlsx", index_col=0)
+
+    fig, axs = plt.subplots(3, 1, figsize=(10, 9), sharex='col')
+    fig.suptitle("Wynik algorytmu dla różnych operatorów krzyżowania ", fontsize=16)
+    fig.text(0.04, 0.5, 'Progi zmiany operatora krzyżowania, mutacji', va='center', rotation='vertical', fontsize=14)
+
+    axs[0].plot(data1020.iloc[13:]["Minimum Fun"], color="red", label="Minimum")
+    axs[0].plot(data1020["Average Fun"], color="blue", label="Średnia")
+    axs[0].plot(data1020["Maximum Fun"], color='green', label="Maksimum")
+    axs[0].set_ylabel("400, 800")
+    axs[1].plot(data2040.iloc[13:]["Minimum Fun"], color="red", label="Minimum")
+    axs[1].plot(data2040["Average Fun"], color="blue", label="Średnia")
+    axs[1].plot(data2040["Maximum Fun"], color='green', label="Maksimum")
+    axs[1].set_ylabel("800, 1600")
+    axs[2].plot(data3060.iloc[13:]["Minimum Fun"], color="red", label="Minimum")
+    axs[2].plot(data3060["Average Fun"], color="blue", label="Średnia")
+    axs[2].plot(data3060["Maximum Fun"], color='green', label="Maksimum")
+    axs[2].set_ylabel("1200, 2400")
+    axs[2].set_xlabel("Iteracja", fontsize=12)
+    plt.legend(fontsize=16)
+
+    plt.savefig("Plots & Charts/prawdopodobieństwa.png")
+    plt.show()
+
+    return fig
+
+
+# Wpływ początkowej generacji rozwiązań na końcowe rozwiązanie
 def controversial_test():
     df4000 = pd.read_excel("Dat/RawData_iter_4000.xlsx", index_col=0)
 
@@ -157,6 +189,3 @@ def controversial_test():
     plt.savefig("Plots & Charts/yahoooy.png")
     plt.show()
     return fig
-
-
-a = controversial_test()
