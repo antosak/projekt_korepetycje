@@ -6,7 +6,7 @@ import pandas as pd
 import numpy as np
 
 # Width of histogram bars (number from  0 to 1)
-szerokosc_paskow = 1
+bars_width = 1
 
 
 # Histogram, three objective functions in terms of number of iterations
@@ -24,38 +24,38 @@ def first_test():
     fig1.subplots_adjust(top=0.95, bottom=0.05)
     fig1.text(0.02, 0.5, 'Liczba iteracji', va='center', rotation='vertical', fontsize=14)
 
-    axs[0, 0].hist(df500['Maximum income'], bins=20, rwidth=szerokosc_paskow)
+    axs[0, 0].hist(df500['Maximum income'], bins=20, rwidth=bars_width)
     axs[0, 0].set_ylabel("500")
-    axs[1, 0].hist(df1000['Maximum income'], bins=20, rwidth=szerokosc_paskow)
+    axs[1, 0].hist(df1000['Maximum income'], bins=20, rwidth=bars_width)
     axs[1, 0].set_ylabel("1000")
-    axs[2, 0].hist(df2000['Maximum income'], bins=20, rwidth=szerokosc_paskow)
+    axs[2, 0].hist(df2000['Maximum income'], bins=20, rwidth=bars_width)
     axs[2, 0].set_ylabel("2000")
-    axs[3, 0].hist(df4000['Maximum income'], bins=20, rwidth=szerokosc_paskow)
+    axs[3, 0].hist(df4000['Maximum income'], bins=20, rwidth=bars_width)
     axs[3, 0].set_ylabel("4000")
-    axs[4, 0].hist(df6000['Maximum income'], bins=20, rwidth=szerokosc_paskow)
+    axs[4, 0].hist(df6000['Maximum income'], bins=20, rwidth=bars_width)
     axs[4, 0].set_ylabel("6000")
-    axs[5, 0].hist(df8000['Maximum income'], bins=20, rwidth=szerokosc_paskow)
+    axs[5, 0].hist(df8000['Maximum income'], bins=20, rwidth=bars_width)
     axs[5, 0].set_ylabel("8000")
-    axs[6, 0].hist(df10000['Maximum income'], bins=20, rwidth=szerokosc_paskow)
+    axs[6, 0].hist(df10000['Maximum income'], bins=20, rwidth=bars_width)
     axs[6, 0].set_ylabel("10000")
     axs[6, 0].set_xlabel("Przychód [PLN]", fontsize=12)
 
-    axs[0, 1].hist(df500['Suboptimal teaching time'], bins=20, rwidth=szerokosc_paskow)
-    axs[1, 1].hist(df1000['Suboptimal teaching time'], bins=20, rwidth=szerokosc_paskow)
-    axs[2, 1].hist(df2000['Suboptimal teaching time'], bins=20, rwidth=szerokosc_paskow)
-    axs[3, 1].hist(df4000['Suboptimal teaching time'], bins=20, rwidth=szerokosc_paskow)
-    axs[4, 1].hist(df6000['Suboptimal teaching time'], bins=20, rwidth=szerokosc_paskow)
-    axs[5, 1].hist(df8000['Suboptimal teaching time'], bins=20, rwidth=szerokosc_paskow)
-    axs[6, 1].hist(df10000['Suboptimal teaching time'], bins=20, rwidth=szerokosc_paskow)
+    axs[0, 1].hist(df500['Suboptimal teaching time'], bins=20, rwidth=bars_width)
+    axs[1, 1].hist(df1000['Suboptimal teaching time'], bins=20, rwidth=bars_width)
+    axs[2, 1].hist(df2000['Suboptimal teaching time'], bins=20, rwidth=bars_width)
+    axs[3, 1].hist(df4000['Suboptimal teaching time'], bins=20, rwidth=bars_width)
+    axs[4, 1].hist(df6000['Suboptimal teaching time'], bins=20, rwidth=bars_width)
+    axs[5, 1].hist(df8000['Suboptimal teaching time'], bins=20, rwidth=bars_width)
+    axs[6, 1].hist(df10000['Suboptimal teaching time'], bins=20, rwidth=bars_width)
     axs[6, 1].set_xlabel("Czas [h]", fontsize=12)
 
-    axs[0, 2].hist(df500['Final maximum'], bins=20, rwidth=szerokosc_paskow)
-    axs[1, 2].hist(df1000['Final maximum'], bins=20, rwidth=szerokosc_paskow)
-    axs[2, 2].hist(df2000['Final maximum'], bins=20, rwidth=szerokosc_paskow)
-    axs[3, 2].hist(df4000['Final maximum'], bins=20, rwidth=szerokosc_paskow)
-    axs[4, 2].hist(df6000['Final maximum'], bins=20, rwidth=szerokosc_paskow)
-    axs[5, 2].hist(df8000['Final maximum'], bins=20, rwidth=szerokosc_paskow)
-    axs[6, 2].hist(df10000['Final maximum'], bins=20, rwidth=szerokosc_paskow)
+    axs[0, 2].hist(df500['Final maximum'], bins=20, rwidth=bars_width)
+    axs[1, 2].hist(df1000['Final maximum'], bins=20, rwidth=bars_width)
+    axs[2, 2].hist(df2000['Final maximum'], bins=20, rwidth=bars_width)
+    axs[3, 2].hist(df4000['Final maximum'], bins=20, rwidth=bars_width)
+    axs[4, 2].hist(df6000['Final maximum'], bins=20, rwidth=bars_width)
+    axs[5, 2].hist(df8000['Final maximum'], bins=20, rwidth=bars_width)
+    axs[6, 2].hist(df10000['Final maximum'], bins=20, rwidth=bars_width)
     axs[6, 2].set_xlabel("Funkcja celu [PLN/h]", fontsize=12)
 
     plt.savefig("Plots & Charts/objective functions comparison.png")
@@ -63,7 +63,7 @@ def first_test():
     return fig1
 
 
-# Minimal, average, maximum solution (out of total population size 50) throughout iterations
+# Minimal, average, maximum solution (out of total population size 50) throughout iterations (NOT INCLUDED)
 def second_test():
     data4000 = pd.read_excel("Dat/RawData_oneiter_4000.xlsx", index_col=0)
     data10000 = pd.read_excel("Dat/RawData_oneiter_10000.xlsx", index_col=0)
@@ -98,26 +98,26 @@ def third_test_hist():
     fig1.subplots_adjust(top=0.93, left=0.1)
     fig1.text(0.01, 0.5, 'Wielkość populacji', va='center', rotation='vertical', fontsize=14)
 
-    axs[0, 0].hist(df25['Maximum income'], bins=20, rwidth=szerokosc_paskow)
+    axs[0, 0].hist(df25['Maximum income'], bins=20, rwidth=bars_width)
     axs[0, 0].set_ylabel("25")
-    axs[1, 0].hist(df50['Maximum income'], bins=20, rwidth=szerokosc_paskow)
+    axs[1, 0].hist(df50['Maximum income'], bins=20, rwidth=bars_width)
     axs[1, 0].set_ylabel("50")
-    axs[2, 0].hist(df75['Maximum income'], bins=20, rwidth=szerokosc_paskow)
+    axs[2, 0].hist(df75['Maximum income'], bins=20, rwidth=bars_width)
     axs[2, 0].set_ylabel("75")
-    axs[3, 0].hist(df100['Maximum income'], bins=20, rwidth=szerokosc_paskow)
+    axs[3, 0].hist(df100['Maximum income'], bins=20, rwidth=bars_width)
     axs[3, 0].set_ylabel("100")
     axs[3, 0].set_xlabel("Przychód [PLN]", fontsize=12)
 
-    axs[0, 1].hist(df25['Suboptimal teaching time'], bins=20, rwidth=szerokosc_paskow)
-    axs[1, 1].hist(df50['Suboptimal teaching time'], bins=20, rwidth=szerokosc_paskow)
-    axs[2, 1].hist(df75['Suboptimal teaching time'], bins=20, rwidth=szerokosc_paskow)
-    axs[3, 1].hist(df100['Suboptimal teaching time'], bins=20, rwidth=szerokosc_paskow)
+    axs[0, 1].hist(df25['Suboptimal teaching time'], bins=20, rwidth=bars_width)
+    axs[1, 1].hist(df50['Suboptimal teaching time'], bins=20, rwidth=bars_width)
+    axs[2, 1].hist(df75['Suboptimal teaching time'], bins=20, rwidth=bars_width)
+    axs[3, 1].hist(df100['Suboptimal teaching time'], bins=20, rwidth=bars_width)
     axs[3, 1].set_xlabel("Czas [h]", fontsize=12)
 
-    axs[0, 2].hist(df25['Final maximum'], bins=20, rwidth=szerokosc_paskow)
-    axs[1, 2].hist(df50['Final maximum'], bins=20, rwidth=szerokosc_paskow)
-    axs[2, 2].hist(df75['Final maximum'], bins=20, rwidth=szerokosc_paskow)
-    axs[3, 2].hist(df100['Final maximum'], bins=20, rwidth=szerokosc_paskow)
+    axs[0, 2].hist(df25['Final maximum'], bins=20, rwidth=bars_width)
+    axs[1, 2].hist(df50['Final maximum'], bins=20, rwidth=bars_width)
+    axs[2, 2].hist(df75['Final maximum'], bins=20, rwidth=bars_width)
+    axs[3, 2].hist(df100['Final maximum'], bins=20, rwidth=bars_width)
     axs[3, 2].set_xlabel("Funkcja celu [PLN/h]", fontsize=12)
 
     plt.savefig("Plots & Charts/pop_size and objective functions.png")
@@ -126,7 +126,7 @@ def third_test_hist():
     return fig1
 
 
-# Plot no first 500
+# Plot without first 500 iterations
 def third_test_plot():
     data1020 = pd.read_excel("Dat/RawData_popsize_2_25.xlsx", index_col=0)
     data2040 = pd.read_excel("Dat/RawData_popsize_2_50.xlsx", index_col=0)
@@ -367,6 +367,3 @@ def optimized_performance():
     plt.show()
 
     return fig
-
-
-a = third_test_hist()
