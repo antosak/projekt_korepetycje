@@ -10,9 +10,9 @@ import numpy as np
 import uno
 
 print('Preparing data ...')
-number_of_iterations = 4000
+number_of_iterations = 6000
 client_list = uno.create_brave_new_world('Examples/Tutoring500nonlinear.xlsx')
-population_size = min(2 * len(client_list), 50)
+population_size = 25
 crossover_barrier = number_of_iterations // 10
 day_ptr_list = [0]
 for i in range(len(client_list)):
