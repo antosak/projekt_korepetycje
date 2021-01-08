@@ -43,7 +43,7 @@ while len(current_population) < population_size:
         kappa_population.append(kappa)
         evaluations.append(uno.final_objective_function(population_member, kappa, client_list))
 
-print('Calculating ...\n ETC. ', 0.024 * number_of_iterations, '[s]\n')
+print('Calculating ...\n')
 probability = 0.8
 for curr_iter in range(number_of_iterations):
     rand = np.random.random_sample()
